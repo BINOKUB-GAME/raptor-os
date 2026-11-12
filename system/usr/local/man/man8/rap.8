@@ -1,0 +1,74 @@
+.\" $Id: rap.8,v 1.2 2026/11/12 12:00:00 raptor Exp $
+.Dd $Mdocdate: November 12 2026 $
+.Dt RAP 8
+.Os RAPTOR-OS
+.Sh NAME
+.Nm rap
+.Nd moteur souverain anti-rancongiciel et console tactique
+.Sh SYNOPSIS
+.Nm rap
+.Ar commande
+.Op Ar options ...
+.Sh DESCRIPTION
+.Nm
+est l'interface de contrôle unifiée de
+.Sy RAPTOR DEFENSE v2.0
+sur le système
+.Sy RAPTOR-OS .
+Elle combine une sentinelle noyau passive basée sur
+.Xr kqueue 2
+.Pq Dv EVFILT_VNODE ,
+un moteur de neutralisation réflexe
+.Pq Dv SIGSTOP , SIGKILL ,
+une boîte noire médico-légale en mémoire partagée
+.Pq Pa /raptor_blackbox
+et une console tactique réseau couplée au pare-feu
+.Xr pf 4 .
+.Sh COMMANDS
+.Bl -tag -width Ds
+.It Cm sentry run Oo Fl -arm Oc Ar répertoire ...
+Déploie les fichiers leurres
+.Pq Pa !00_raptor_vault.kdbx
+et active la surveillance à 0 % CPU.
+.It Cm sentry dump
+Affiche l'anneau médico-légal (64 entrées) avec horodatage,
+PID, PPID, UID, latence et ligne de commande.
+.It Cm sentry clear
+Purge à chaud l'anneau circulaire médico-légal en mémoire partagée
+.Pq privilèges root requis .
+.It Cm sentry disarm Ar répertoire ...
+Retire proprement les fichiers leurres des dossiers cibles.
+.It Cm netop
+Ouvre la console tactique réseau temps réel et isole les IP
+distantes dans la table noyau
+.Aq badhosts
+via
+.Xr pfctl 8
+.Pq touche Ic b ,
+modale Ic Ctrl+B .
+.It Cm status , top , hunt , rx , preload , heur , net , kill , man
+Modules d'inspection mémoire, chasse aux processus et aide.
+.El
+.Sh FILES
+.Bl -tag -width "/usr/local/man/man8/rap.8" -compact
+.It Pa /usr/local/bin/rap
+Binaire principal compilé en C99.
+.It Pa /etc/rc.d/raptor
+Script de service natif géré par
+.Xr rcctl 8 .
+.It Pa /etc/pf.raptor_ban
+Table persistante des IP bannies dans
+.Aq badhosts .
+.It Pa /raptor_blackbox
+Segment de mémoire partagée hébergeant la boîte noire.
+.El
+.Sh EXIT STATUS
+.Ex -std rap
+.Sh SEE ALSO
+.Xr kqueue 2 ,
+.Xr sysctl 2 ,
+.Xr pf 4 ,
+.Xr pf.conf 5 ,
+.Xr pfctl 8 ,
+.Xr rc.subr 8 ,
+.Xr rcctl 8

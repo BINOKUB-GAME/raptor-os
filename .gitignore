@@ -1,0 +1,4 @@
+*.o
+*.core
+bin/rap
+/etc/pf.raptor_ban

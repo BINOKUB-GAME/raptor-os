@@ -40,8 +40,6 @@ Sur une installation OpenBSD/amd64 déjà en place (en tant que `root`) :
     cd raptor-os
     RAPTOR_APP_PASS="VotreMotDePasseApp!" RAPTOR_ROOT_PASS="VotreMotDePasseRoot!" ksh install.sh
 
-*(Adaptez l'URL `git clone` avec votre identifiant GitHub si différent.)*
-
 ---
 
 ## Licence

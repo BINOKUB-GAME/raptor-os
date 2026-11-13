@@ -40,6 +40,7 @@
                 <a href="#piliers">3 Piliers</a>
                 <a href="#bare-metal">ISO Bare-Metal</a>
                 <a href="#red-team">Banc Red Team</a>
+                <a href="faq.html">FAQ</a>
                 <a href="man.html" class="nav-man-pill">man centurion(8)</a>
             </nav>
         </div>
@@ -184,6 +185,40 @@
             </div>
         </section>
 
+    <!-- 05b. Checklist Operateur Post-Installation Bare-Metal -->
+    <section class="section" id="post-install">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-kicker">Exploitation Premier Démarrage</div>
+                <h2>Checklist Opérateur Post-Installation Bare-Metal</h2>
+                <p>Contrôles critiques à exécuter dans les 5 premières minutes suivant le redémarrage initial après l'installation de <code>site80.tgz</code>.</p>
+            </div>
+            <div class="checklist-grid">
+                <article class="check-card critical">
+                    <span class="check-step-badge">ÉTAPE 01 &bull; INTERFACE PF</span>
+                    <h3>Adapter l'interface réseau physique</h3>
+                    <p>Identifiez le nom exact de votre carte réseau matérielle (ex. <code>em0</code>, <code>igc0</code>, <code>re0</code>) et remplacez <code>vio0</code> dans <code>ext_if</code> au sein de <code>/etc/pf.conf</code>.</p>
+                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>ifconfig | grep -E '^[a-z]'
+<span class="prompt">raptor-os# </span>vi /etc/pf.conf</pre>
+                </article>
+                <article class="check-card critical">
+                    <span class="check-step-badge">ÉTAPE 02 &bull; COFFRE-FORT SQL</span>
+                    <h3>Sécuriser les identifiants MariaDB</h3>
+                    <p>Consignez en lieu sûr les mots de passe aléatoires générés au premier démarrage par <code>/install.site</code>, puis effacez définitivement le fichier en clair.</p>
+                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>cat /root/RAPTOR_CREDENTIALS.txt
+<span class="prompt">raptor-os# </span>rm -P /root/RAPTOR_CREDENTIALS.txt</pre>
+                </article>
+                <article class="check-card verified">
+                    <span class="check-step-badge">ÉTAPE 03 &bull; VERROUILLAGE</span>
+                    <h3>Valider les 6 démons &amp; securelevel</h3>
+                    <p>Confirmez l'activité des 6 services du bastion, l'écoute exclusive de MariaDB sur <code>127.0.0.1</code> et le verrouillage noyau <code>kern.securelevel=1</code>.</p>
+                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>rap status
+<span class="prompt">raptor-os# </span>sysctl kern.securelevel</pre>
+                </article>
+            </div>
+        </div>
+    </section>
+
         <!-- 06. Banc d'essai Red Team & Resistance sur reseau local -->
         <section class="section" id="red-team">
             <div class="container">
@@ -247,5 +282,6 @@
         </div>
     </footer>
 
+    <script src="assets/js/copy-code.js"></script>
 </body>
 </html>

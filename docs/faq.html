@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Architecture &amp; Exploitation — CENTURION | RAPTOR-OS 2.0</title>
+    <link rel="stylesheet" href="assets/css/centurion.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <a href="index.html" class="brand">
+                <span>CENTURION</span>
+                <span class="brand-tag">RAPTOR-OS 2.0</span>
+            </a>
+            <nav class="nav-links" aria-label="Navigation principale">
+                <a href="index.html#architecture">Architecture</a>
+                <a href="index.html#piliers">3 Piliers</a>
+                <a href="index.html#bare-metal">ISO Bare-Metal</a>
+                <a href="faq.html" class="active">FAQ</a>
+                <a href="man.html" class="nav-man-pill">man centurion(8)</a>
+            </nav>
+        </div>
+    </header>
+    <main class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-kicker">Architecture &amp; Exploitation</div>
+                <h1>Foire Aux Questions — Bastion CENTURION</h1>
+                <p>Réponses techniques sur les choix de conception de <strong>RAPTOR-OS 2.0</strong>, l'administration sous verrouillage noyau et le déploiement sur matériel dédié.</p>
+            </div>
+            <nav class="faq-toc" aria-label="Sommaire des questions">
+                <a href="#q-socle">01. OpenBSD &amp; C natif vs Conteneurs</a>
+                <a href="#q-securelevel">02. Administrer sous securelevel=1</a>
+                <a href="#q-pf-guard">03. Anti-auto-bannissement &amp; badhosts</a>
+                <a href="#q-coffre-canary">04. Coffre SQL &amp; Piège Canary</a>
+                <a href="#q-bare-metal">05. Installation ISO &amp; site80.tgz</a>
+                <a href="#q-licence-isc">06. Licence ISC &amp; Usage commercial</a>
+            </nav>
+            <div class="faq-list">
+
+                <!-- 04. Questions 01 & 02 -->
+                <article class="faq-item" id="q-socle">
+                    <span class="faq-q-tag">QUESTION 01 &bull; CHOIX D'ARCHITECTURE</span>
+                    <h2>Pourquoi un socle OpenBSD monolithe en C natif plutôt que Linux avec Docker ?</h2>
+                    <p>
+                        Une stack de conteneurs empile un orchestrateur, un démon privilégié, des réseaux virtuels et des
+                        machines virtuelles applicatives qui élargissent la surface d'attaque et introduisent des latences
+                        imprévisibles (ramasse-miettes, surcouches réseau).
+                    </p>
+                    <p>
+                        <strong>CENTURION</strong> privilégie le déterminisme : le système repose directement sur
+                        <code>OpenBSD/amd64</code> (mitigations <code>W^X</code>, ASLR natif, LibreSSL) et exécute des
+                        passerelles transactionnelles compilées statiquement en C pur (<code>raptor_db</code>,
+                        <code>raptor_db_post</code>), isolées dans le <code>chroot</code> <code>/var/www</code> avec
+                        restriction stricte des appels système par <code>pledge(2)</code>.
+                    </p>
+                </article>
+
+                <article class="faq-item security" id="q-securelevel">
+                    <span class="faq-q-tag">QUESTION 02 &bull; VERROUILLAGE NOYAU</span>
+                    <h2>Comment administrer ou mettre à jour le bastion lorsque <code>kern.securelevel=1</code> est actif ?</h2>
+                    <p>
+                        Lorsque <code>kern.securelevel=1</code> est verrouillé, le noyau OpenBSD interdit à chaud toute
+                        modification des règles du pare-feu <code>pf</code> (<code>pfctl -d</code> ou <code>pfctl -f</code>
+                        sont refusés, même en <code>root</code>) ainsi que le retrait des drapeaux immuables (<code>schg</code>)
+                        sur les binaires critiques.
+                    </p>
+                    <p>
+                        En exploitation courante, le défenseur conserve toutefois le plein contrôle de la table dynamique
+                        <code>&lt;badhosts&gt;</code> pour bannir ou lever une quarantaine sans redémarrer :
+                    </p>
+                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>pfctl -t badhosts -T show
+<span class="prompt">raptor-os# </span>pfctl -t badhosts -T delete 192.168.1.50</pre>
+                    <p>
+                        Pour une mise à jour majeure des règles <code>/etc/pf.conf</code> ou des binaires protégés par
+                        <code>schg</code>, il suffit d'effectuer un redémarrage planifié en mode maintenance
+                        (<code>securelevel=0</code>) avant de rebasculer en production verrouillée.
+                    </p>
+                </article>
+
+                <!-- 05. Questions 03 & 04 -->
+                <article class="faq-item security" id="q-pf-guard">
+                    <span class="faq-q-tag">QUESTION 03 &bull; BOUCLIER RÉSEAU &amp; WAF</span>
+                    <h2>Comment fonctionne la fusion <code>rap</code> + <code>pf</code> et le bastion peut-il se bannir lui-même ?</h2>
+                    <p>
+                        Deux mécanismes complémentaires alimentent la table noyau <code>&lt;badhosts&gt;</code>
+                        (persistée dans <code>/etc/pf.raptor_ban</code>) : au niveau transport, les seuils
+                        <code>overload &lt;badhosts&gt; flush global</code> de <code>/etc/pf.conf</code> coupent
+                        immédiatement les rafales SSH (<code>3/5s</code>) et HTTP (<code>50/5s</code>) ; au niveau applicatif,
+                        <code>RAPTOR-HTTPD/2.0</code> (<code>raptor_ipc.c</code>) injecte instantanément dans
+                        <code>&lt;badhosts&gt;</code> toute IP déclenchant une signature WAF <code>TRAP_*</code>.
+                    </p>
+                    <p>
+                        Pour éviter toute paralysie du serveur par auto-bannissement, <code>raptor_guard.c</code> et
+                        <code>raptor_ipc.c</code> intègrent une liste blanche matérielle inconditionnelle qui exclut
+                        systématiquement les interfaces locales <code>127.0.0.1</code> et <code>::1</code> de toute action
+                        de quarantaine.
+                    </p>
+                </article>
+
+                <article class="faq-item vault" id="q-coffre-canary">
+                    <span class="faq-q-tag">QUESTION 04 &bull; COFFRE-FORT &amp; FORENSIQUE</span>
+                    <h2>Comment les données sensibles sont-elles protégées contre une altération silencieuse ?</h2>
+                    <p>
+                        La base de données MariaDB écoute exclusivement sur l'interface de bouclage
+                        <code>127.0.0.1:3306</code>, inaccessible depuis le réseau externe. À l'intérieur de la base
+                        <code>raptor_db</code>, la table piège <code>raptor_vault_canary</code> est gardée par le
+                        déclencheur SQL <code>trg_raptor_canary_guard</code> : toute tentative de lecture non autorisée ou
+                        de modification lève immédiatement l'exception <code>RAPTOR_SQL_CANARY_BREACH</code> interceptée par
+                        le démon <code>raptor-sql-sentry</code>.
+                    </p>
+                    <p>
+                        En parallèle, <code>rap sentry arm</code> déploie des fichiers canaris dans <code>/etc</code>,
+                        <code>/var/www</code>, <code>/home</code> et <code>/root</code>, tandis que l'anneau mémoire
+                        partagé <code>/raptor_blackbox</code> conserve les 64 derniers événements critiques consultables
+                        hors-ligne via <code>rap sentry blackbox</code>.
+                    </p>
+                </article>
+
+                <!-- 06. Questions 05 & 06 -->
+                <article class="faq-item" id="q-bare-metal">
+                    <span class="faq-q-tag">QUESTION 05 &bull; DÉPLOIEMENT MATÉRIEL</span>
+                    <h2>Que faut-il vérifier lors du premier démarrage après l'installation sur PC dédié ?</h2>
+                    <p>
+                        Lors de l'installation depuis la clé USB <code>raptor-os-2.0-amd64.iso</code>, assurez-vous que
+                        l'ensemble <code>[X] site80.tgz</code> est bien sélectionné. Au premier redémarrage, le script
+                        <code>/install.site</code> génère automatiquement des mots de passe MariaDB aléatoires uniques dans
+                        <code>/root/RAPTOR_CREDENTIALS.txt</code>.
+                    </p>
+                    <p>
+                        Exécutez ensuite ces trois contrôles (et remplacez <code>vio0</code> par le nom de votre carte
+                        réseau physique dans <code>/etc/pf.conf</code> si nécessaire) :
+                    </p>
+                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>ifconfig
+<span class="prompt">raptor-os# </span>rap status
+<span class="prompt">raptor-os# </span>rcctl check raptor mysqld raptor_sql_sentry slowcgi php85_fpm httpd</pre>
+                </article>
+
+                <article class="faq-item" id="q-licence-isc">
+                    <span class="faq-q-tag">QUESTION 06 &bull; DROITS &amp; CONFORMITÉ</span>
+                    <h2>Puis-je déployer CENTURION / RAPTOR-OS 2.0 en production commerciale ?</h2>
+                    <p>
+                        Oui. L'ensemble du projet est distribué sous <strong>licence ISC</strong> (avec attribution amont à
+                        <strong>The OpenBSD Project</strong>). Cette licence libre permissive autorise l'utilisation, la
+                        copie, la modification et le déploiement en environnement commercial ou institutionnel sans redevance,
+                        sous la seule réserve de conserver les mentions de copyright et le texte de la licence.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <!-- 07. Pied de page & Chargement modulaire -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>
+                <strong>CENTURION — Le Bastion Numérique</strong> &bull; Propulsé par <strong>RAPTOR-OS 2.0</strong> (OpenBSD/amd64).
+            </div>
+            <div>
+                Distribué sous <a href="../LICENSE">licence ISC</a> avec attribution amont à <strong>The OpenBSD Project</strong>.
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/copy-code.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+  FICHIER     : docs/index.html
+  REVISION    : 1.0
+  DESCRIPTION : Page d'accueil officielle de CENTURION — Le Bastion Numerique
+                propulse par RAPTOR-OS 2.0 (OpenBSD/amd64, kern.securelevel=1).
+                Presente l'architecture transactionnelle souveraine, les 3 piliers
+                defensifs (Flux C-CGI, Coffre-fort SQL/Canary, Fusion rap+pf),
+                le deploiement Bare-Metal via ISO autonome et le banc d'essai
+                Red Team sur reseau local.
+
+  SECTIONS NUMEROTEES :
+    01. En-tete HTML & Liaison feuille de style centurion.css
+    02. Barre de navigation superieure (Accueil, Architecture, ISO, Red Team, man)
+    03. Section Hero & Chaine de traitement d'une transaction critique
+    04. Les 3 Piliers de CENTURION (Transactions, Coffre-fort, Fusion rap+pf)
+    05. Deploiement Bare-Metal (ISO 845 Mo, SHA256 & Installation cle USB)
+    06. Banc d'essai Red Team & Resistance aux assauts sur reseau local
+    07. Pied de page & Attribution Licence ISC / The OpenBSD Project
+========================================================================== -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CENTURION — Le Bastion Numérique | RAPTOR-OS 2.0 (OpenBSD/amd64)</title>
+    <meta name="description" content="CENTURION sous RAPTOR-OS 2.0 : bastion numérique souverain sur OpenBSD/amd64 dédié aux plateformes transactionnelles critiques, coffres-forts SQL et défense active rap+pf.">
+    <link rel="stylesheet" href="assets/css/centurion.css">
+</head>
+<body>
+
+    <!-- 02. Barre de navigation superieure -->
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <a href="index.html" class="brand">
+                <span>CENTURION</span>
+                <span class="brand-tag">RAPTOR-OS 2.0</span>
+            </a>
+            <nav class="nav-links" aria-label="Navigation principale">
+                <a href="#architecture" class="active">Architecture</a>
+                <a href="#piliers">3 Piliers</a>
+                <a href="#bare-metal">ISO Bare-Metal</a>
+                <a href="#red-team">Banc Red Team</a>
+                <a href="man.html" class="nav-man-pill">man centurion(8)</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- 03. Section Hero & Chaine de traitement d'une transaction critique -->
+        <section class="hero" id="architecture">
+            <div class="container">
+                <div class="status-bar">
+                    <span class="status-dot"></span>
+                    <span>SOCLE OPENBSD/AMD64 &bull; KERN.SECURELEVEL=1 &bull; APPLIANCE AUTONOME</span>
+                </div>
+                <h1>CENTURION — <span>Le Bastion Numérique</span></h1>
+                <p class="hero-lead">
+                    Distribution durcie et autonome bâtie sur <strong>RAPTOR-OS 2.0</strong>, conçue pour les
+                    <strong>plateformes transactionnelles critiques</strong> et la rétention inviolable de données sensibles.
+                    Chaque requête franchit un pare-feu applicatif pré-exécution, des passerelles C natif confinées par
+                    <code>chroot</code> et <code>pledge(2)</code>, et un verrouillage noyau immédiat via <code>pf</code>.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#bare-metal" class="btn btn-primary">Télécharger l'ISO v2.0 (845 Mo)</a>
+                    <a href="man.html" class="btn btn-secondary">Consulter man centurion(8) [rap + pf]</a>
+                </div>
+
+                <div class="pipeline" aria-label="Flux d'une transaction dans CENTURION">
+                    <div class="pipe-step lock">
+                        <div class="pipe-label">01. Bouclier Noyau</div>
+                        <div class="pipe-title">Packet Filter (pf)</div>
+                        <div class="pipe-desc">Filtrage L3/L4 et bannissement instantané des attaquants dans la table <code>badhosts</code>.</div>
+                    </div>
+                    <div class="pipe-step">
+                        <div class="pipe-label">02. Sas Applicatif</div>
+                        <div class="pipe-title">RAPTOR-HTTPD/2.0</div>
+                        <div class="pipe-desc">Inspection WAF pré-exécution, 6 en-têtes de sécurité HTTP et journalisation dans <code>/raptor_blackbox</code>.</div>
+                    </div>
+                    <div class="pipe-step">
+                        <div class="pipe-label">03. Moteur Transactionnel</div>
+                        <div class="pipe-title">C-CGI + pledge(2)</div>
+                        <div class="pipe-desc">Exécution déterministe (<code>raptor_db</code> / <code>raptor_db_post</code>) en environnement <code>chroot</code> minimal.</div>
+                    </div>
+                    <div class="pipe-step vault">
+                        <div class="pipe-label">04. Coffre &amp; Sonde SQL</div>
+                        <div class="pipe-title">MariaDB + SQL Sentry</div>
+                        <div class="pipe-desc">Écoute stricte <code>127.0.0.1</code>, table piège <code>raptor_vault_canary</code> et audit temps réel.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04. Les 3 Piliers de CENTURION -->
+        <section class="section" id="piliers">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-kicker">Architecture Souveraine</div>
+                    <h2>Les trois piliers du Bastion CENTURION</h2>
+                    <p>Une défense cohérente couvrant la transaction en transit, la donnée verrouillée au repos et le pilotage unifié entre couche applicative et noyau.</p>
+                </div>
+
+                <div class="grid-3">
+                    <article class="card">
+                        <span class="card-badge">PILIER 01 &bull; FLUX EN TRANSIT</span>
+                        <h3>Transactions Critiques Haute Vélocité</h3>
+                        <p>
+                            Élimination des couches intermédiaires lourdes au profit de passerelles compilées en C pur
+                            pour les relais de paiement, webhooks financiers et validations critiques.
+                        </p>
+                        <ul class="spec-list">
+                            <li>Latence déterministe sub-milliseconde sans machine virtuelle</li>
+                            <li>Confinement strict par <code>chroot</code> et double appel <code>pledge(2)</code></li>
+                            <li>Requêtes SQL paramétrées et validation stricte des entrées</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <span class="card-badge">PILIER 02 &bull; RÉTENTION AU REPOS</span>
+                        <h3>Coffre-Fort Numérique &amp; Détection Canary</h3>
+                        <p>
+                            Protection des registres sensibles (finance, santé, actes juridiques) contre toute altération
+                            silencieuse grâce à l'immuabilité noyau et aux pièges actifs.
+                        </p>
+                        <ul class="spec-list">
+                            <li>Verrouillage <code>kern.securelevel=1</code> des règles et binaires critiques</li>
+                            <li>Table piège <code>raptor_vault_canary</code> (alerte <code>RAPTOR_SQL_CANARY_BREACH</code>)</li>
+                            <li>Boîte noire forensique en mémoire partagée (64 événements)</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <span class="card-badge">PILIER 03 &bull; CONTRÔLE UNIFIÉ</span>
+                        <h3>Fusion Opérationnelle <code>rap</code> + <code>pf</code></h3>
+                        <p>
+                            Convergence directe entre la détection applicative HTTP/SQL et le blocage réseau au niveau
+                            du noyau OpenBSD sans délai de synchronisation.
+                        </p>
+                        <ul class="spec-list">
+                            <li>Supervision des 6 démons : <code>raptor</code>, <code>raptor_sql_sentry</code>, <code>httpd</code>, <code>slowcgi</code>, <code>php85_fpm</code>, <code>mysqld</code></li>
+                            <li>Bannissement dynamique via <code>pfctl -t badhosts</code></li>
+                            <li>Documentation complète dans <a href="man.html">man centurion(8)</a></li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05. Deploiement Bare-Metal -->
+        <section class="section" id="bare-metal">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-kicker">Déploiement Matériel Dédié</div>
+                    <h2>Image ISO Autonome &amp; Installation Bare-Metal</h2>
+                    <p>Installez simultanément le système d'exploitation et l'ensemble des composants CENTURION / RAPTOR-OS sur une machine physique dédiée à partir d'une seule clé USB amorçable.</p>
+                </div>
+
+                <div class="release-box">
+                    <div class="release-meta">
+                        <span><strong>Version :</strong> RAPTOR-OS 2.0 (CENTURION)</span>
+                        <span><strong>Architecture :</strong> amd64 (BIOS + UEFI)</span>
+                        <span><strong>Taille :</strong> 845 Mo (<code>site80.tgz</code> inclus)</span>
+                    </div>
+
+                    <p><strong>1. Télécharger l'image et sa signature officielle :</strong></p>
+                    <p style="margin: 0.6rem 0 1rem;">
+                        Récupérez <code>raptor-os-2.0-amd64.iso</code> et <code>raptor-os-2.0-amd64.iso.sha256</code> depuis
+                        <a href="../../releases/latest"><strong>GitHub Releases (v2.0)</strong></a>, puis vérifiez l'empreinte :
+                    </p>
+                    <div class="sha-box">
+                        05ef0bea698e1e29b28323e06a58744a2e370b738220f8ce23d92f51140aef0e &nbsp;raptor-os-2.0-amd64.iso
+                    </div>
+
+                    <p style="margin-top: 1.25rem;"><strong>2. Préparer la clé USB d'installation (<code>sdX</code> = périphérique USB) :</strong></p>
+                    <pre class="terminal-block"><span class="prompt">$ </span>sha256sum -c raptor-os-2.0-amd64.iso.sha256
+<span class="prompt">$ </span>sudo dd if=raptor-os-2.0-amd64.iso of=/dev/sdX bs=4M status=progress conv=fsync</pre>
+
+                    <p style="color: var(--text-muted); font-size: 0.92rem;">
+                        Démarrez le serveur dédié sur la clé USB et conservez l'ensemble <code>site80.tgz</code> sélectionné
+                        (<code>[X] site80.tgz</code>). Au premier démarrage, <code>/install.site</code> génère automatiquement des mots de passe
+                        SQL aléatoires uniques enregistrés dans <code>/root/RAPTOR_CREDENTIALS.txt</code>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06. Banc d'essai Red Team & Resistance sur reseau local -->
+        <section class="section" id="red-team">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-kicker">Validation Empirique &amp; Stress-Test</div>
+                    <h2>Banc d'essai Red Team — Résistance sur Réseau Local</h2>
+                    <p>Protocole d'assauts frontaux exécutés depuis un poste attaquant sur le réseau local contre une machine physique dédiée équipée de CENTURION / RAPTOR-OS 2.0.</p>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Vecteur d'attaque testé</th>
+                                <th>Cible du Bastion</th>
+                                <th>Mécanisme de défense attendu</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Inondation HTTP &amp; rafales de requêtes (Stress L7)</td>
+                                <td><code>RAPTOR-HTTPD/2.0</code></td>
+                                <td>Limitation de débit, rejet pré-exécution et inscription dans <code>badhosts</code></td>
+                                <td><span class="tag-ready">PRÊT POUR TEST MATÉRIEL</span></td>
+                            </tr>
+                            <tr>
+                                <td>Injections SQL &amp; traversées de répertoires sur endpoints</td>
+                                <td><code>raptor_db_post</code> / <code>db_test.php</code></td>
+                                <td>Blocage WAF, confinement <code>pledge(2)</code> et capture dans <code>/raptor_blackbox</code></td>
+                                <td><span class="tag-ready">PRÊT POUR TEST MATÉRIEL</span></td>
+                            </tr>
+                            <tr>
+                                <td>Altération de données sensibles &amp; accès non autorisé</td>
+                                <td><code>raptor_vault_canary</code> / MariaDB</td>
+                                <td>Déclenchement <code>RAPTOR_SQL_CANARY_BREACH</code> et alerte <code>raptor-sql-sentry</code></td>
+                                <td><span class="tag-ready">PRÊT POUR TEST MATÉRIEL</span></td>
+                            </tr>
+                            <tr>
+                                <td>Tentative de désactivation des règles pare-feu ou binaires</td>
+                                <td>Noyau OpenBSD / <code>pf</code></td>
+                                <td>Verrouillage matériel <code>kern.securelevel=1</code> (modification impossible à chaud)</td>
+                                <td><span class="tag-ready">PRÊT POUR TEST MATÉRIEL</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 07. Pied de page & Attribution Licence ISC -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>
+                <strong>CENTURION — Le Bastion Numérique</strong> &bull; Propulsé par <strong>RAPTOR-OS 2.0</strong> (OpenBSD/amd64).
+            </div>
+            <div>
+                Distribué sous <a href="../LICENSE">licence ISC</a> avec attribution amont à <strong>The OpenBSD Project</strong>.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

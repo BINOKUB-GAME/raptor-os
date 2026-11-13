@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+  FICHIER     : docs/man.html
+  REVISION    : 2.0
+  DESCRIPTION : Manuel systeme officiel et exhaustif centurion(8) / rap(8)
+                de RAPTOR-OS 2.0 (OpenBSD/amd64). Documente l'integralite des
+                drapeaux et sous-commandes CLI de rap, l'integration noyau
+                Packet Filter (pf.conf / pfctl / <badhosts>), les demons
+                RAPTOR-HTTPD/2.0 et raptor-sql-sentry, les passerelles C-CGI
+                confinees par pledge(2) et les outils rap-edit / rapless.
+
+  SECTIONS NUMEROTEES :
+    01. En-tete HTML & Liaison centurion.css
+    02. Barre de navigation superieure
+    03. Barre de recherche interactive & filtres exhaustifs
+    04. Feuille de manuel BSD : NAME, SYNOPSIS & DESCRIPTION
+    05. OPTIONS GLOBALES DU BINAIRE RAP
+    06. SOUS-COMMANDES COMPLETES DE RAP (11 modules CLI)
+    07. FUSION PACKET FILTER (pf.conf, table <badhosts> & pfctl)
+    08. DEMONS SYSTEME, PASSERELLES C-CGI & SERVICES RC.D
+    09. OUTILS COMPAGNONS (rap-edit & rapless)
+    10. EXEMPLES RED TEAM, FILES, EXIT STATUS & SEE ALSO
+    11. Pied de page & Chargement modulaire de assets/js/man-filter.js
+========================================================================== -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>centurion(8) — Manuel Officiel Exhaustif rap &amp; pf | RAPTOR-OS 2.0</title>
+    <meta name="description" content="Autorité officielle de RAPTOR-OS 2.0 : manuel complet des commandes rap, Packet Filter (pf / badhosts), RAPTOR-HTTPD/2.0, raptor-sql-sentry, C-CGI pledge(2) et rap-edit.">
+    <link rel="stylesheet" href="assets/css/centurion.css">
+</head>
+<body>
+
+    <!-- 02. Barre de navigation superieure -->
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <a href="index.html" class="brand">
+                <span>CENTURION</span>
+                <span class="brand-tag">RAPTOR-OS 2.0</span>
+            </a>
+            <nav class="nav-links" aria-label="Navigation principale">
+                <a href="index.html#architecture">Architecture</a>
+                <a href="index.html#piliers">3 Piliers</a>
+                <a href="index.html#bare-metal">ISO Bare-Metal</a>
+                <a href="index.html#red-team">Banc Red Team</a>
+                <a href="man.html" class="nav-man-pill active">man centurion(8)</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-kicker">Autorité Technique Officielle &bull; Référence Complète</div>
+                <h1>Manuel Système Unifié : <code>centurion(8)</code></h1>
+                <p>Spécification exhaustive de toutes les commandes, options, sous-commandes et règles noyau de <strong>RAPTOR-OS 2.0</strong> (<code>OpenBSD/amd64</code>, <code>kern.securelevel=1</code>).</p>
+            </div>
+
+            <!-- 03. Barre de recherche interactive & filtres exhaustifs -->
+            <div class="man-toolbar" role="search">
+                <div class="man-search-row">
+                    <input type="search" id="man-search" class="man-search-input" placeholder="Filtrer (ex: rap, pfctl, badhosts, sentry, netop, hunt, preload, pledge, rap-edit) — raccourci '/'" aria-label="Filtrer le manuel">
+                    <span id="man-count" class="man-count"></span>
+                </div>
+                <div class="man-filters" role="group" aria-label="Filtrer par sous-système">
+                    <button type="button" class="filter-btn active" data-filter="all">Tout afficher (Exhaustif)</button>
+                    <button type="button" class="filter-btn" data-filter="rap">CLI rap (Options &amp; Modules)</button>
+                    <button type="button" class="filter-btn" data-filter="pf">Packet Filter (pf &amp; badhosts)</button>
+                    <button type="button" class="filter-btn" data-filter="daemon">Démons, C-CGI &amp; rc.d</button>
+                    <button type="button" class="filter-btn" data-filter="tools">Outils (rap-edit &amp; rapless)</button>
+                </div>
+            </div>
+
+            <!-- 04. Feuille de manuel BSD -->
+            <article class="man-sheet">
+                <div class="man-running-header">
+                    <span>CENTURION(8)</span>
+                    <span>RAPTOR-OS System Manager's Manual</span>
+                    <span>CENTURION(8)</span>
+                </div>
+
+                <section class="man-section">
+                    <h2 class="man-section-title">NAME</h2>
+                    <div class="man-body">
+                        <p><code>centurion</code>, <code>rap</code>, <code>pf</code>, <code>raptor-httpd</code>, <code>raptor-sql-sentry</code>, <code>raptor_db</code>, <code>rap-edit</code>, <code>rapless</code> &mdash; architecture complète de défense active, moteur transactionnel C-CGI confiné et filtrage noyau unifié de RAPTOR-OS 2.0.</p>
+                    </div>
+                </section>
+
+                <section class="man-section">
+                    <h2 class="man-section-title">SYNOPSIS</h2>
+                    <div class="man-body">
+                        <pre class="terminal-block"><strong>rap</strong> [-qrfvh] [-n <em>lignes</em>] &lt;status | top | net | netop | heur | hunt | preload | rx | kill | freeze | sentry | man&gt; [options]
+<strong>raptor</strong> [-c | --cli] [-o | --html <em>fichier</em>] [-h | --help]
+<strong>pfctl</strong> [-nf /etc/pf.conf] [-f /etc/pf.conf] [-sr] [-ss] [-si] [-k <em>ip</em>] -t badhosts -T &lt;show | add | delete | flush | test | zero&gt;
+<strong>httpd</strong> [-dnv] [-D <em>macro=valeur</em>] [-f <em>fichier</em>] [-I <em>num</em>] [-P <em>titre</em>]
+<strong>raptor-sql-sentry</strong>
+<strong>rap-edit</strong> [-v | --version] [-h | --help] <em>fichier1</em> [<em>fichier2</em> <em>fichier3</em> <em>fichier4</em>]
+<strong>rapless</strong> [<em>fichier</em>]</pre>
+                    </div>
+                </section>
+
+                <section class="man-section">
+                    <h2 class="man-section-title">DESCRIPTION</h2>
+                    <div class="man-body">
+                        <p>
+                            <strong>CENTURION</strong> désigne la configuration souveraine de <strong>RAPTOR-OS 2.0</strong> dédiée aux
+                            plateformes transactionnelles critiques et à la rétention inviolable de données sensibles. L'architecture
+                            fusionne la détection applicative de couche 7 (<code>RAPTOR-HTTPD/2.0</code>, passerelles C statiques
+                            confinées sous <code>chroot</code> et <code>pledge(2)</code>, sonde <code>raptor-sql-sentry</code> et
+                            superviseur <code>rap</code>) avec le pare-feu noyau OpenBSD <code>pf(4)</code> via la table dynamique
+                            persistante <code>&lt;badhosts&gt;</code> (<code>/etc/pf.raptor_ban</code>) et le verrouillage matériel
+                            <code>kern.securelevel=1</code>.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- 05. OPTIONS GLOBALES DU BINAIRE RAP -->
+                <section class="man-section" data-filterable="true">
+                    <h2 class="man-section-title">OPTIONS GLOBALES DE RAP &amp; DU MOTEUR RAPTOR</h2>
+                    <div class="man-body">
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap -q, --quiet <span class="man-layer-tag rap">RAP &bull; GLOBAL</span></div>
+                            <div class="man-desc">Active le mode silencieux : supprime les bannières décoratives et ne retourne que les résultats essentiels ou codes d'alerte pour l'automatisation en script.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap -r, --raw <span class="man-layer-tag rap">RAP &bull; GLOBAL</span></div>
+                            <div class="man-desc">Désactive le formatage enrichi et les séquences ANSI afin de produire une sortie brute exploitable par <code>awk</code>, <code>grep</code> ou <code>rapless</code>.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap -f, --force <span class="man-layer-tag rap">RAP &bull; GLOBAL</span></div>
+                            <div class="man-desc">Force l'exécution immédiate d'une action critique (bannissement réseau, arrêt de processus ou réarmement de sentinelle) sans demande de confirmation interactive.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap -v, --verbose <span class="man-layer-tag rap">RAP &bull; GLOBAL</span></div>
+                            <div class="man-desc">Affiche les détails techniques complets lors des diagnostics (chemins de sockets, descripteurs de fichiers, scores heuristiques et états noyau).</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap -n &lt;N&gt; (ou -n&lt;N&gt;) <span class="man-layer-tag rap">RAP &bull; GLOBAL</span></div>
+                            <div class="man-desc">Limite l'affichage des tableaux d'audit, des journaux forensiques ou des connexions actives aux <code>N</code> premières entrées.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">raptor [-c | --cli] [-o | --html &lt;fichier&gt;] [-h | --help] <span class="man-layer-tag rap">RAPTOR &bull; RAPPORT</span></div>
+                            <div class="man-desc">Exécute un audit complet du système en mode console (<code>-c</code> / <code>--cli</code>) ou génère un rapport d'audit forensique autonome au format HTML vers le chemin spécifié (<code>-o</code> / <code>--html</code>).</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 06. SOUS-COMMANDES COMPLETES DE RAP -->
+                <section class="man-section" data-filterable="true">
+                    <h2 class="man-section-title">SOUS-COMMANDES COMPLETES DE RAP</h2>
+                    <div class="man-body">
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap status <span class="man-layer-tag rap">RAP &bull; SUPERVISION</span></div>
+                            <div class="man-desc">Affiche l'état de santé global du bastion : vérification des processus critiques (<code>raptor</code>, <code>raptor_sql_sentry</code>, <code>httpd</code>, <code>slowcgi</code>, <code>php85_fpm</code>, <code>mysqld</code>), contrôle de l'isolation locale <code>127.0.0.1</code> et lecture de <code>kern.securelevel</code>.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap top <span class="man-layer-tag rap">RAP &bull; PROCESSUS</span></div>
+                            <div class="man-desc">Inspecte en temps réel l'empreinte mémoire (<code>VmRSS</code>), l'état d'exécution et la légitimité des binaires actifs sur le système.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap net [-l | --list [c2 | tor | abuse | all]] [-i | --inspect &lt;IPv4&gt;] [&lt;IPv4&gt;] <span class="man-layer-tag rap">RAP &bull; RENSEIGNEMENT</span></div>
+                            <div class="man-desc">Corrèle les connexions TCP actives avec les bases locales de renseignement sur les menaces. <code>-l</code> liste les hôtes classés par catégorie (<code>c2</code>, <code>tor</code>, <code>abuse</code> ou <code>all</code>) ; <code>-i &lt;IPv4&gt;</code> (ou passage direct de l'adresse IP) lance une investigation approfondie d'une adresse suspecte.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap netop [-n &lt;lignes&gt;] <span class="man-layer-tag rap">RAP &bull; OPÉRATIONS RÉSEAU</span></div>
+                            <div class="man-desc">Console tactique des sockets TCP : filtre et trie les états (<code>ESTABLISHED</code>, <code>LISTEN</code>, <code>TIME_WAIT</code>, <code>CLOSE_WAIT</code>, <code>LAST_ACK</code>, <code>FIN_WAIT1/2</code>), inspecte les descripteurs de fichiers (<code>socket:[...]</code>, <code>PPid</code>), permet de tuer une connexion malveillante (registre de <em>tombstones</em>) et d'enregistrer l'IP dans le registre de bannissement.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap heur <span class="man-layer-tag rap">RAP &bull; HEURISTIQUE</span></div>
+                            <div class="man-desc">Analyse heuristique avancée des processus : détecte les exécutables lancés depuis des répertoires volatils (<code>/tmp/</code>, <code>/var/tmp/</code>, <code>/dev/shm/</code>) ainsi que toute usurpation d'identité d'un démon système exécuté hors de <code>/usr/</code>, <code>/bin/</code>, <code>/sbin/</code> ou <code>/lib/</code>.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap hunt [-a | --arm] [--dry-run] <span class="man-layer-tag rap">RAP &bull; CHASSE</span></div>
+                            <div class="man-desc">Traque active des anomalies mémoire (segments RWX non autorisés) et des implantations furtives. L'option <code>--dry-run</code> simule les mesures d'endiguement sans modifier l'état du système, tandis que <code>-a</code> / <code>--arm</code> active la neutralisation automatique.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap preload <span class="man-layer-tag rap">RAP &bull; INTÉGRITÉ</span></div>
+                            <div class="man-desc">Inspecte l'environnement des processus en cours d'exécution afin de détecter toute tentative de détournement de bibliothèques partagées via l'injection de variables <code>LD_PRELOAD=</code>.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap rx [-a | --arm] [--dry-run] <span class="man-layer-tag rap">RAP &bull; RÉFLEXE</span></div>
+                            <div class="man-desc">Moteur de réflexes défensifs immédiats (<code>rap_reflex</code>) : surveille les liaisons de sockets suspectes et l'apparition d'arguments ou binaires exécutés depuis <code>/tmp</code> ou <code>/var/tmp</code> pour déclencher un confinement instantané.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap kill [-f] &lt;PID&gt; &nbsp;|&nbsp; rap freeze &lt;PID&gt; <span class="man-layer-tag rap">RAP &bull; NEUTRALISATION</span></div>
+                            <div class="man-desc"><code>rap kill</code> interrompt immédiatement un processus hostile identifié par son <code>PID</code> (avec escalade forcée <code>-f</code>). <code>rap freeze</code> suspend l'exécution du processus (<code>SIGSTOP</code>) afin de figer son espace mémoire pour l'analyse forensique.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap sentry &lt;arm | disarm | status | run | dump | blackbox | clear&gt; [-d | --daemon] [-a | --arm] [--dry-run] [chemins...] <span class="man-layer-tag rap">RAP &bull; SENTINELLE &amp; BOÎTE NOIRE</span></div>
+                            <div class="man-desc">Pilote la sentinelle d'intégrité fichiers et la boîte noire mémoire partagée (<code>/raptor_blackbox</code>) :
+                                <br>&bull; <code>arm [chemins...]</code> / <code>disarm [chemins...]</code> : déploie ou retire les fichiers pièges canaris dans les répertoires surveillés (par défaut <code>/etc /var/www /home /root</code>).
+                                <br>&bull; <code>run [-d|--daemon] [-a|--arm] [--dry-run] [chemins...]</code> : lance la boucle de surveillance temps réel (exécutée en arrière-plan par <code>/etc/rc.d/raptor</code>).
+                                <br>&bull; <code>status</code> : affiche l'état d'armement des répertoires protégés.
+                                <br>&bull; <code>dump</code> ou <code>blackbox</code> : restitue les 64 derniers événements critiques enregistrés dans l'anneau mémoire <code>/raptor_blackbox</code>.
+                                <br>&bull; <code>clear</code> : purge les entrées acquittées de la boîte noire.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="rap">
+                            <div class="man-cmd">rap man [numéro | fn | fonct | functions] &nbsp;|&nbsp; rap help <span class="man-layer-tag rap">RAP &bull; DOCUMENTATION</span></div>
+                            <div class="man-desc">Affiche le manuel embarqué directement dans le terminal, permet l'accès direct par numéro de section ou de fonction (<code>rap man &lt;section&gt; [fonction]</code>) et liste le dictionnaire des fonctions internes via l'argument <code>fn</code>, <code>fonct</code> ou <code>functions</code>.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 07. FUSION PACKET FILTER (PF.CONF & PFCTL) -->
+                <section class="man-section" data-filterable="true">
+                    <h2 class="man-section-title">FUSION PACKET FILTER (PF.CONF, TABLE BADHOSTS &amp; PFCTL)</h2>
+                    <div class="man-body">
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">table &lt;badhosts&gt; persist file "/etc/pf.raptor_ban" <span class="man-layer-tag pf">PF &bull; TABLE DYNAMIQUE</span></div>
+                            <div class="man-desc">Table noyau persistante partagée entre <code>pf(4)</code> et <code>RAPTOR-HTTPD/2.0</code> (<code>raptor_ipc.c</code>). Toute adresse IP ajoutée dans <code>&lt;badhosts&gt;</code> est bloquée avant même d'atteindre la pile applicative via la règle prioritaire : <code>block drop in quick on $ext_if from &lt;badhosts&gt; to any</code>.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">Politique par défaut &amp; Normalisation (scrub) <span class="man-layer-tag pf">PF &bull; DURCISSEMENT</span></div>
+                            <div class="man-desc">Configuration active dans <code>/etc/pf.conf</code> : politique de rejet silencieux <code>set block-policy drop</code> et <code>block drop all</code>, réassemblage et assainissement des paquets via <code>match in all scrub (no-df random-id max-mss 1440)</code>, et suivi d'état strict <code>modulate state</code> sur les flux sortants autorisés.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">Protection Overload SSH (22) &amp; HTTP (80) &rarr; badhosts <span class="man-layer-tag pf">PF &bull; AUTO-BANNISSEMENT</span></div>
+                            <div class="man-desc">Limitation matérielle intégrée au pare-feu :
+                                <br>&bull; <strong>SSH (Port 22) :</strong> <code>(max-src-conn 10, max-src-conn-rate 3/5, overload &lt;badhosts&gt; flush global)</code> — bannit automatiquement et coupe toutes les sessions dès 3 tentatives en 5 secondes.
+                                <br>&bull; <strong>HTTP (Port 80) :</strong> <code>(max-src-conn 100, max-src-conn-rate 50/5, overload &lt;badhosts&gt; flush global)</code> — neutralise les rafales et inondations L4/L7 au niveau noyau.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">pfctl -t badhosts -T show <span class="man-layer-tag pf">PFCTL &bull; AUDIT</span></div>
+                            <div class="man-desc">Liste toutes les adresses IP actuellement en quarantaine dans la mémoire du noyau OpenBSD (alimentées soit par les règles <code>overload</code> de <code>pf.conf</code>, soit par les déclencheurs WAF <code>TRAP_*</code> de <code>RAPTOR-HTTPD</code>).</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">pfctl -t badhosts -T add &lt;ip&gt; &amp;&amp; pfctl -k &lt;ip&gt; <span class="man-layer-tag pf">PFCTL &bull; BLOCAGE</span></div>
+                            <div class="man-desc">Ajoute manuellement une adresse IP ou un bloc CIDR dans <code>&lt;badhosts&gt;</code> et purge immédiatement toutes ses connexions établies dans la table d'états du noyau (<code>-k</code>).</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">pfctl -t badhosts -T delete &lt;ip&gt; &nbsp;|&nbsp; pfctl -t badhosts -T flush <span class="man-layer-tag pf">PFCTL &bull; LEVÉE</span></div>
+                            <div class="man-desc"><code>delete &lt;ip&gt;</code> retire une adresse spécifique de la table <code>&lt;badhosts&gt;</code> ; <code>flush</code> vide intégralement la table de quarantaine en mémoire noyau.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">pfctl -t badhosts -T test &lt;ip&gt; &nbsp;|&nbsp; pfctl -t badhosts -T zero <span class="man-layer-tag pf">PFCTL &bull; DIAGNOSTIC</span></div>
+                            <div class="man-desc"><code>test &lt;ip&gt;</code> vérifie instantanément si une adresse correspond à une entrée de <code>&lt;badhosts&gt;</code> ; <code>zero</code> remet à zéro les compteurs de paquets et d'octets bloqués par entrée.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">pfctl -sr &nbsp;|&nbsp; pfctl -ss &nbsp;|&nbsp; pfctl -si <span class="man-layer-tag pf">PFCTL &bull; ÉTAT NOYAU</span></div>
+                            <div class="man-desc"><code>-sr</code> affiche les règles de filtrage actives ; <code>-ss</code> affiche la table complète des états réseau en cours ; <code>-si</code> affiche les statistiques des compteurs de l'interface externe (<code>$ext_if</code>).</div>
+                        </div>
+
+                        <div class="man-entry" data-category="pf">
+                            <div class="man-cmd">pfctl -nf /etc/pf.conf &nbsp;|&nbsp; pfctl -f /etc/pf.conf &nbsp;|&nbsp; sysctl kern.securelevel <span class="man-layer-tag pf">PFCTL &bull; IMMUABILITÉ</span></div>
+                            <div class="man-desc"><code>-nf</code> valide la syntaxe de <code>/etc/pf.conf</code> sans l'appliquer ; <code>-f</code> charge la configuration (uniquement lorsque <code>kern.securelevel=0</code>). Une fois le système passé à <code>kern.securelevel=1</code>, le jeu de règles <code>pf</code> devient strictement immuable jusqu'au redémarrage physique (seule la table dynamique <code>&lt;badhosts&gt;</code> reste modifiable par le défenseur).</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 08. DEMONS SYSTEME, PASSERELLES C-CGI & SERVICES RC.D -->
+                <section class="man-section" data-filterable="true">
+                    <h2 class="man-section-title">DÉMONS SYSTÈME, PASSERELLES C-CGI &amp; SERVICES RC.D</h2>
+                    <div class="man-body">
+                        <div class="man-entry" data-category="daemon">
+                            <div class="man-cmd">httpd [-dnv] [-D macro=valeur] [-f fichier] [-I num] [-P titre] <span class="man-layer-tag rap">RAPTOR-HTTPD/2.0</span></div>
+                            <div class="man-desc">Serveur HTTP durci intègrant <code>raptor_waf.c</code>, <code>raptor_guard.c</code>, <code>raptor_headers.h</code> et <code>raptor_ipc.c</code> :
+                                <br>&bull; <code>-n</code> : vérifie la validité syntaxique de <code>/etc/httpd.conf</code>.
+                                <br>&bull; <code>-d</code> / <code>-v</code> : exécute au premier plan en mode débogage verbeux.
+                                <br>&bull; <code>-f &lt;fichier&gt;</code> : spécifie un fichier de configuration alternatif.
+                                <br>&bull; <code>-D macro=valeur</code> : définit une macro de configuration.
+                                <br>&bull; Protection native contre l'auto-bannissement de <code>127.0.0.1</code> et <code>::1</code>, et déclenchement automatique du bannissement <code>pfctl</code> sur détection d'une signature <code>TRAP_*</code>.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="daemon">
+                            <div class="man-cmd">/usr/local/sbin/raptor-sql-sentry <span class="man-layer-tag sec">AUDIT SQL &bull; CANARY</span></div>
+                            <div class="man-desc">Démon de surveillance continue de MariaDB (<code>raptor_db</code>). Contrôle l'intégrité de la table piège <code>raptor_vault_canary</code> protégée par le déclencheur <code>trg_raptor_canary_guard</code> (signal SQL <code>45000</code> / <code>RAPTOR_SQL_CANARY_BREACH</code>) et journalise toute tentative d'altération.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="daemon">
+                            <div class="man-cmd">/var/www/cgi-bin/raptor_db &amp; raptor_db_post <span class="man-layer-tag sec">C-CGI &bull; PLEDGE(2)</span></div>
+                            <div class="man-desc">Passerelles transactionnelles compilées statiquement en C pur (permissions <code>0550 root:www</code>), exécutées via <code>slowcgi</code> dans le <code>chroot</code> <code>/var/www</code> avec restriction des appels système par <code>pledge(2)</code>. <code>raptor_db_post</code> impose strictement la méthode HTTP <code>POST</code> et la présence d'un en-tête <code>CONTENT_LENGTH</code> valide.</div>
+                        </div>
+
+                        <div class="man-entry" data-category="daemon">
+                            <div class="man-cmd">rcctl [check | start | stop | restart] raptor mysqld raptor_sql_sentry slowcgi php85_fpm httpd <span class="man-layer-tag sec">RC.D &bull; 6 DÉMONS</span></div>
+                            <div class="man-desc">Supervision standard OpenBSD des 6 services constitutifs du bastion :
+                                <br>&bull; <code>raptor</code> (<code>/etc/rc.d/raptor</code>) : exécute <code>/usr/local/bin/rap sentry run --arm /etc /var/www /home /root</code> en arrière-plan.
+                                <br>&bull; <code>raptor_sql_sentry</code> (<code>/etc/rc.d/raptor_sql_sentry</code>) : lance la sonde SQL.
+                                <br>&bull; <code>mysqld</code>, <code>slowcgi</code>, <code>php85_fpm</code>, <code>httpd</code> : pile base de données et serveur web durci.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 09. OUTILS COMPAGNONS (RAP-EDIT & RAPLESS) -->
+                <section class="man-section" data-filterable="true">
+                    <h2 class="man-section-title">OUTILS COMPAGNONS (RAP-EDIT &amp; RAPLESS)</h2>
+                    <div class="man-body">
+                        <div class="man-entry" data-category="tools">
+                            <div class="man-cmd">rap-edit [-v | --version] [-h | --help] &lt;fichier1&gt; [fichier2] [fichier3] [fichier4] <span class="man-layer-tag sec">ÉDITEUR FORENSIQUE</span></div>
+                            <div class="man-desc">Éditeur multi-tampons sécurisé (jusqu'à 4 fichiers simultanés) doté d'audits d'intégrité, d'inspection hexadécimale et de protection anti-corruption :
+                                <br>&bull; <strong>Navigation &amp; Tampons :</strong> <code>n</code>/<code>next</code>, <code>p</code>/<code>prev</code>, <code>b</code>, <code>tab</code>, <code>bd</code>, <code>close</code>, <code>$</code> (fin), <code>info</code>/<code>count</code>, <code>help</code>/<code>?</code>.
+                                <br>&bull; <strong>Protection &amp; Sauvegarde :</strong> <code>ro</code> (lecture seule), <code>rw</code> (lecture/écriture), <code>bak</code> (copie de secours), <code>w!</code> (écriture forcée), <code>q!</code> (quitter sans enregistrer), <code>panic</code> (restauration d'urgence depuis <code>orig</code>/<code>disk</code>).
+                                <br>&bull; <strong>Forensique &amp; Assainissement :</strong> <code>hex</code> (vue hexadécimale), <code>diff</code> (comparaison différentielle avec le disque), <code>:rch &lt;motif&gt;</code> (recherche), <code>d</code>/<code>dd</code> (suppression), <code>clean</code>, <code>dos2unix</code>/<code>d2u</code>, <code>strip-null</code>/<code>null</code> (purge des octets nuls).</div>
+                        </div>
+
+                        <div class="man-entry" data-category="tools">
+                            <div class="man-cmd">rapless [fichier] &nbsp;|&nbsp; commande | rapless <span class="man-layer-tag sec">PAGINEUR SÉCURISÉ</span></div>
+                            <div class="man-desc">Afficheur paginé autonome conçu pour parcourir sans risque d'injection de séquences d'échappement les journaux d'audit, les extractions de <code>/raptor_blackbox</code> ou les sorties brutes de <code>rap -r</code>.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. EXEMPLES RED TEAM, FILES, EXIT STATUS & SEE ALSO -->
+                <section class="man-section">
+                    <h2 class="man-section-title">EXEMPLES DE PILOTAGE &amp; BANC D'ESSAI RED TEAM</h2>
+                    <div class="man-body">
+                        <p><strong>1. Inspection complète après une vague d'assauts sur le réseau local :</strong></p>
+                        <pre class="terminal-block"><span class="prompt">raptor-os# </span>rap status
+<span class="prompt">raptor-os# </span>rap sentry blackbox
+<span class="prompt">raptor-os# </span>pfctl -t badhosts -T show
+<span class="prompt">raptor-os# </span>rap net -l all</pre>
+
+                        <p><strong>2. Chasse active et audit heuristique en mode simulation puis armé :</strong></p>
+                        <pre class="terminal-block"><span class="prompt">raptor-os# </span>rap heur
+<span class="prompt">raptor-os# </span>rap preload
+<span class="prompt">raptor-os# </span>rap hunt --dry-run
+<span class="prompt">raptor-os# </span>rap rx --arm</pre>
+                    </div>
+                </section>
+
+                <section class="man-section">
+                    <h2 class="man-section-title">FILES</h2>
+                    <div class="man-body">
+                        <p><code>/etc/pf.conf</code> &mdash; Règles du pare-feu noyau OpenBSD Packet Filter et seuils <code>overload</code>.</p>
+                        <p><code>/etc/pf.raptor_ban</code> &mdash; Fichier de persistance disque de la table dynamique <code>&lt;badhosts&gt;</code>.</p>
+                        <p><code>/etc/httpd.conf</code> &mdash; Configuration des serveurs virtuels, en-têtes de sécurité et passerelles CGI/FastCGI.</p>
+                        <p><code>/raptor_blackbox</code> &mdash; Anneau mémoire partagé forensique (64 événements haute priorité).</p>
+                        <p><code>/var/www/cgi-bin/raptor_db</code>, <code>/var/www/cgi-bin/raptor_db_post</code> &mdash; Passerelles transactionnelles C confinées par <code>pledge(2)</code>.</p>
+                        <p><code>/root/RAPTOR_CREDENTIALS.txt</code> &mdash; Identifiants MariaDB aléatoires générés au premier démarrage physique.</p>
+                    </div>
+                </section>
+
+                <section class="man-section">
+                    <h2 class="man-section-title">EXIT STATUS</h2>
+                    <div class="man-body">
+                        <p>Les utilitaires <code>rap</code> et <code>pfctl</code> retournent <code>0</code> en cas d'exécution nominale et une valeur <code>&gt; 0</code> en cas d'erreur de syntaxe, de privilèges insuffisants ou de violation d'intégrité détectée.</p>
+                    </div>
+                </section>
+
+                <section class="man-section">
+                    <h2 class="man-section-title">SEE ALSO</h2>
+                    <div class="man-body">
+                        <p><code>pf(4)</code>, <code>pf.conf(5)</code>, <code>pfctl(8)</code>, <code>pledge(2)</code>, <code>chroot(2)</code>, <code>httpd(8)</code>, <code>httpd.conf(5)</code>, <code>slowcgi(8)</code>, <code>rcctl(8)</code>, <code>securelevel(7)</code></p>
+                    </div>
+                </section>
+
+                <div class="man-running-footer">
+                    <span>RAPTOR-OS 2.0 (OpenBSD/amd64)</span>
+                    <span>Novembre 2026</span>
+                    <span>CENTURION(8)</span>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- 11. Pied de page & Chargement modulaire -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div>
+                <strong>CENTURION — Le Bastion Numérique</strong> &bull; Propulsé par <strong>RAPTOR-OS 2.0</strong> (OpenBSD/amd64).
+            </div>
+            <div>
+                Distribué sous <a href="../LICENSE">licence ISC</a> avec attribution amont à <strong>The OpenBSD Project</strong>.
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/man-filter.js"></script>
+</body>
+</html>

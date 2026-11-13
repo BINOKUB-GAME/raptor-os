@@ -1,0 +1,722 @@
+/* ============================================================================
+ * FICHIER     : docs/assets/css/centurion.css
+ * REVISION    : 1.1
+ * DESCRIPTION : Feuille de style principale et modulaire du site vitrine et
+ *               technique CENTURION — Le Bastion Numerique (RAPTOR-OS 2.0).
+ *               Passage au theme clair haute lisibilite sur fond blanc pur,
+ *               bordures nettes, cartes d'architecture 3 couches, blocs
+ *               SHA256/Bare-Metal et tableau de banc d'essai Red Team.
+ *
+ * SECTIONS NUMEROTEES :
+ *   01. Variables & Palette claire (:root)
+ *   02. Reinitialisation & Typographie de base
+ *   03. Barre de navigation & Badges d'etat
+ *   04. Section Hero & Flux d'architecture 3 couches
+ *   05. Cartes des 3 piliers (Transactions, Coffre-fort, Fusion rap+pf)
+ *   06. Bloc Bare-Metal ISO, SHA256 & Commandes Terminal
+ *   07. Tableau Banc d'essai Red Team (Reseau local)
+ *   08. Pied de page, Licence ISC & Responsive
+ * ============================================================================ */
+
+/* 01. Variables & Palette claire (:root) */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-surface: #f1f5f9;
+    --bg-terminal: #0f172a;
+    --border-subtle: #e2e8f0;
+    --border-accent: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent-amber: #b45309;
+    --accent-amber-btn: #d97706;
+    --accent-cyan: #0369a1;
+    --accent-emerald: #047857;
+    --accent-crimson: #b91c1c;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+/* 02. Reinitialisation & Typographie de base */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-primary);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-primary);
+}
+
+a {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+a:hover {
+    color: var(--accent-amber);
+}
+
+code, pre {
+    font-family: var(--font-mono);
+}
+
+:not(pre) > code {
+    background-color: var(--bg-surface);
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    padding: 0.1rem 0.36rem;
+    border-radius: 4px;
+    font-size: 0.87em;
+}
+
+.container {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* 03. Barre de navigation & Badges d'etat */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-main);
+}
+
+.brand-tag {
+    background-color: #fef3c7;
+    color: var(--accent-amber);
+    border: 1px solid #fcd34d;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 0.92rem;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+    color: var(--text-main);
+}
+
+.nav-man-pill {
+    font-family: var(--font-mono);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-accent);
+    padding: 0.3rem 0.7rem;
+    border-radius: 5px;
+    color: var(--accent-cyan) !important;
+    font-size: 0.85rem;
+    font-weight: 600 !important;
+}
+
+.nav-man-pill:hover {
+    border-color: var(--accent-amber);
+    color: var(--accent-amber) !important;
+    background-color: #fffbeb;
+}
+
+/* 04. Section Hero & Flux d'architecture 3 couches */
+.hero {
+    padding: 4.5rem 0 3.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.status-bar {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-emerald);
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    margin-bottom: 1.5rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-emerald);
+}
+
+.hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+}
+
+.hero h1 span {
+    color: var(--accent-amber);
+}
+
+.hero-lead {
+    max-width: 780px;
+    color: var(--text-muted);
+    font-size: 1.12rem;
+    margin-bottom: 2rem;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2.75rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.72rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-amber-btn);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-amber);
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    border-color: var(--border-accent);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    background-color: #f0f9ff;
+}
+
+.pipeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.pipe-step {
+    background-color: #ffffff;
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--accent-cyan);
+    padding: 0.95rem 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.pipe-step.lock {
+    border-left-color: var(--accent-amber-btn);
+}
+
+.pipe-step.vault {
+    border-left-color: var(--accent-emerald);
+}
+
+.pipe-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+
+.pipe-title {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    margin-bottom: 0.3rem;
+}
+
+.pipe-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* 05. Cartes des 3 piliers (Transactions, Coffre-fort, Fusion rap+pf) */
+.section {
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    background-color: var(--bg-primary);
+}
+
+.section-header {
+    margin-bottom: 2.25rem;
+}
+
+.section-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-amber);
+    margin-bottom: 0.4rem;
+}
+
+.section-header h2 {
+    font-size: 1.85rem;
+    letter-spacing: -0.01em;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    color: var(--text-muted);
+    max-width: 740px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.card-badge {
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    background-color: #f0f9ff;
+    color: var(--accent-cyan);
+    border: 1px solid #bae6fd;
+}
+
+.card h3 {
+    font-size: 1.2rem;
+    color: var(--text-main);
+}
+
+.card p {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+}
+
+.spec-list {
+    list-style: none;
+    margin-top: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 0.88rem;
+}
+
+.spec-list li {
+    padding-left: 1.15rem;
+    position: relative;
+    color: var(--text-main);
+}
+
+.spec-list li::before {
+    content: ">";
+    position: absolute;
+    left: 0;
+    font-family: var(--font-mono);
+    color: var(--accent-amber);
+    font-weight: 700;
+}
+
+/* 06. Bloc Bare-Metal ISO, SHA256 & Commandes Terminal */
+.release-box {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-accent);
+    border-radius: 8px;
+    padding: 1.75rem;
+}
+
+.release-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--text-main);
+}
+
+.release-meta span strong {
+    color: var(--accent-amber);
+}
+
+.terminal-block {
+    background-color: var(--bg-terminal);
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    font-size: 0.86rem;
+    color: #f8fafc;
+    margin: 0.85rem 0 1.25rem;
+}
+
+.terminal-block .prompt {
+    color: #34d399;
+    user-select: none;
+}
+
+.sha-box {
+    background-color: #ffffff;
+    border: 1px dashed var(--border-accent);
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    word-break: break-all;
+}
+
+/* 07. Tableau Banc d'essai Red Team (Reseau local) */
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+th, td {
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-main);
+}
+
+th {
+    background-color: var(--bg-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.tag-ready {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background-color: #fef3c7;
+    color: var(--accent-amber);
+    border: 1px solid #fcd34d;
+}
+
+/* 08. Pied de page, Licence ISC & Responsive */
+.footer {
+    margin-top: auto;
+    padding: 2.25rem 0;
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+@media (max-width: 680px) {
+    .topbar-inner {
+        height: auto;
+        padding: 0.85rem 0;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        gap: 0.9rem;
+    }
+}
+
+/* 09. Page de manuel unifiee man centurion(8) (rap + pf) */
+.man-toolbar {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1.15rem 1.25rem;
+    margin-bottom: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.man-search-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.man-search-input {
+    flex: 1 1 280px;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    padding: 0.65rem 0.9rem;
+    background-color: #ffffff;
+    color: var(--text-main);
+    border: 1px solid var(--border-accent);
+    border-radius: 6px;
+    outline: none;
+}
+
+.man-search-input:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.12);
+}
+
+.man-count {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.man-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 5px;
+    border: 1px solid var(--border-accent);
+    background-color: #ffffff;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+
+.filter-btn.active {
+    background-color: var(--text-main);
+    border-color: var(--text-main);
+    color: #ffffff;
+}
+
+.man-sheet {
+    background-color: #ffffff;
+    border: 1px solid var(--border-accent);
+    border-radius: 8px;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+
+.man-running-header,
+.man-running-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding-bottom: 0.85rem;
+    border-bottom: 2px solid var(--text-main);
+    margin-bottom: 1.75rem;
+}
+
+.man-running-footer {
+    border-bottom: none;
+    border-top: 2px solid var(--text-main);
+    padding-bottom: 0;
+    padding-top: 0.85rem;
+    margin-bottom: 0;
+    margin-top: 2rem;
+}
+
+.man-section {
+    margin-bottom: 1.9rem;
+}
+
+.man-section-title {
+    font-family: var(--font-mono);
+    font-size: 1.02rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--text-main);
+    margin-bottom: 0.75rem;
+}
+
+.man-body {
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.man-entry {
+    border-left: 3px solid var(--border-subtle);
+    padding-left: 1rem;
+    transition: border-color 0.15s ease;
+}
+
+.man-entry:hover {
+    border-left-color: var(--accent-amber-btn);
+}
+
+.man-entry.is-hidden,
+.man-section.is-hidden {
+    display: none;
+}
+
+.man-cmd {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.94rem;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.man-layer-tag {
+    font-size: 0.72rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.man-layer-tag.rap {
+    background-color: #f0f9ff;
+    color: var(--accent-cyan);
+    border: 1px solid #bae6fd;
+}
+
+.man-layer-tag.pf {
+    background-color: #fef3c7;
+    color: var(--accent-amber);
+    border: 1px solid #fcd34d;
+}
+
+.man-layer-tag.sec {
+    background-color: #ecfdf5;
+    color: var(--accent-emerald);
+    border: 1px solid #a7f3d0;
+}
+
+.man-desc {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+@media (max-width: 680px) {
+    .man-sheet {
+        padding: 1.25rem 1rem;
+    }
+
+    .man-body {
+        padding-left: 0.5rem;
+    }
+}

@@ -1,0 +1,80 @@
+parse.o: parse.c /usr/include/stdlib.h /usr/include/sys/cdefs.h \
+  /usr/include/machine/cdefs.h /usr/include/sys/_null.h \
+  /usr/include/machine/_types.h /usr/include/sys/types.h \
+  /usr/include/sys/endian.h /usr/include/sys/_endian.h \
+  /usr/include/sys/_types.h /usr/include/machine/endian.h \
+  /usr/include/string.h /usr/include/strings.h /usr/include/sys/socket.h \
+  /usr/include/sys/uio.h /usr/include/sys/un.h /usr/include/sys/stat.h \
+  /usr/include/sys/time.h /usr/include/sys/select.h /usr/include/time.h \
+  /usr/include/sys/_time.h /usr/include/sys/queue.h \
+  /usr/include/sys/tree.h /usr/include/sys/ioctl.h \
+  /usr/include/sys/ttycom.h /usr/include/sys/ioccom.h \
+  /usr/include/sys/filio.h /usr/include/sys/sockio.h \
+  /usr/include/net/if.h /usr/include/net/if_arp.h \
+  /usr/include/netinet/in.h /usr/include/netinet6/in6.h \
+  /usr/include/arpa/inet.h /usr/include/ctype.h /usr/include/unistd.h \
+  /usr/include/sys/unistd.h /usr/include/err.h /usr/include/errno.h \
+  /usr/include/sys/errno.h /usr/include/limits.h \
+  /usr/include/sys/limits.h /usr/include/machine/limits.h \
+  /usr/include/sys/syslimits.h /usr/include/stdint.h \
+  /usr/include/stdarg.h /usr/include/stdio.h /usr/include/netdb.h \
+  /usr/include/ifaddrs.h /usr/include/syslog.h httpd.h \
+  /usr/include/event.h /usr/include/imsg.h /usr/include/stddef.h \
+  /usr/include/tls.h /usr/include/vis.h patterns.h http.h log.h
+/usr/include/stdlib.h:
+/usr/include/sys/cdefs.h:
+/usr/include/machine/cdefs.h:
+/usr/include/sys/_null.h:
+/usr/include/machine/_types.h:
+/usr/include/sys/types.h:
+/usr/include/sys/endian.h:
+/usr/include/sys/_endian.h:
+/usr/include/sys/_types.h:
+/usr/include/machine/endian.h:
+/usr/include/string.h:
+/usr/include/strings.h:
+/usr/include/sys/socket.h:
+/usr/include/sys/uio.h:
+/usr/include/sys/un.h:
+/usr/include/sys/stat.h:
+/usr/include/sys/time.h:
+/usr/include/sys/select.h:
+/usr/include/time.h:
+/usr/include/sys/_time.h:
+/usr/include/sys/queue.h:
+/usr/include/sys/tree.h:
+/usr/include/sys/ioctl.h:
+/usr/include/sys/ttycom.h:
+/usr/include/sys/ioccom.h:
+/usr/include/sys/filio.h:
+/usr/include/sys/sockio.h:
+/usr/include/net/if.h:
+/usr/include/net/if_arp.h:
+/usr/include/netinet/in.h:
+/usr/include/netinet6/in6.h:
+/usr/include/arpa/inet.h:
+/usr/include/ctype.h:
+/usr/include/unistd.h:
+/usr/include/sys/unistd.h:
+/usr/include/err.h:
+/usr/include/errno.h:
+/usr/include/sys/errno.h:
+/usr/include/limits.h:
+/usr/include/sys/limits.h:
+/usr/include/machine/limits.h:
+/usr/include/sys/syslimits.h:
+/usr/include/stdint.h:
+/usr/include/stdarg.h:
+/usr/include/stdio.h:
+/usr/include/netdb.h:
+/usr/include/ifaddrs.h:
+/usr/include/syslog.h:
+httpd.h:
+/usr/include/event.h:
+/usr/include/imsg.h:
+/usr/include/stddef.h:
+/usr/include/tls.h:
+/usr/include/vis.h:
+patterns.h:
+http.h:
+log.h:

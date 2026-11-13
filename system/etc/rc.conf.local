@@ -1,0 +1,5 @@
+httpd_flags=
+pkg_scripts=raptor mysqld raptor_sql_sentry php85_fpm
+slowcgi_flags=
+smtpd_flags=NO
+sndiod_flags=NO

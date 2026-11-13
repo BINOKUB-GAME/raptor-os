@@ -2,3 +2,13 @@
 *.core
 bin/rap
 /etc/pf.raptor_ban
+
+# Binaires compiles Web/DB & secrets locaux
+raptor_db
+raptor_db_post
+raptor-sql-sentry
+.my.cnf
+.env
+
+
+rap-edit

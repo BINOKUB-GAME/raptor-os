@@ -1,0 +1,44 @@
+================================================================================
+LICENCE DU PROJET RAPTOR-OS (ISC LICENSE & ATTRIBUTION AMONT)
+================================================================================
+
+Copyright (c) 2026 Daniel Ouimet / Projet RAPTOR-OS
+
+L'autorisation d'utiliser, de copier, de modifier et/ou de distribuer ce
+logiciel et ses composants originaux a quelque fin que ce soit, avec ou sans
+frais, est accordee par la presente, a condition que la mention de droit
+d'auteur ci-dessus et la presente notice d'autorisation apparaissent dans
+toutes les copies.
+
+LE LOGICIEL EST FOURNI "EN L'ETAT", SANS GARANTIE D'AUCUNE SORTE, EXPLICITE OU
+IMPLICITE, Y COMPRIS, MAIS SANS S'Y LIMITER, LES GARANTIES DE QUALITE
+MARCHANDE, D'ADEQUATION A UN USAGE PARTICULIER ET D'ABSENCE DE CONTREFACON.
+EN AUCUN CAS LES AUTEURS OU TITULAIRES DU DROIT D'AUTEUR NE POURRONT ETRE
+TENUS RESPONSABLES DE TOUTE RECLAMATION, DE TOUT DOMMAGE OU DE TOUTE AUTRE
+RESPONSABILITE, QUE CE SOIT DANS LE CADRE D'UN CONTRAT, D'UN DELIT OU AUTRE,
+DECOULANT DE, HORS DE OU EN RELATION AVEC LE LOGICIEL OU SON UTILISATION OU
+D'AUTRES INTERACTIONS AVEC LE LOGICIEL.
+
+--------------------------------------------------------------------------------
+ATTRIBUTION AMONT ET RESPECT DES MARQUES (BASE SYSTEME OPENBSD)
+--------------------------------------------------------------------------------
+
+1. Base technologique :
+   RAPTOR-OS est une architecture systeme et defensive durcie construite sur la
+   base du systeme d'exploitation OpenBSD. Les composants du systeme de base
+   amont demeurent la propriete intellectuelle de The OpenBSD Project, Theo de
+   Raadt et leurs contributeurs respectifs, et sont distribues selon les
+   termes des licences ISC et BSD originales conservees dans le systeme.
+
+2. Composants originaux RAPTOR-OS :
+   Les modules developpes specifiquement pour RAPTOR-OS (incluant notamment
+   raptor-httpd / moteur WAF-IDS temps reel, l'anneau memoire forensique
+   raptor_blackbox, la sonde raptor-sql-sentry, l'utilitaire rap, ainsi que
+   les passerelles C-CGI confinees par pledge(2) et les regles Packet Filter)
+   sont places sous la licence ISC ci-dessus.
+
+3. Marques deposees :
+   "OpenBSD" et la mascotte Puffy sont des marques deposees de The OpenBSD
+   Project. RAPTOR-OS est un projet independant et n'est ni affilie a, ni
+   parraine ou approuve par The OpenBSD Project.
+================================================================================

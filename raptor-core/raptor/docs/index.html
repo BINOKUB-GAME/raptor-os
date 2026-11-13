@@ -1,0 +1,300 @@
+<!-- ==========================================================================
+ * NOM DU SCRIPT   : docs/index.html
+ * RÉVISION        : Rev 1.5 (2026-11-01)
+ * PROJET          : RAPTOR DEFENSE v2.0 // Portail Officiel & Hub Développeurs
+ * RESPONSABILITÉ  : Page d'accueil officielle, présentation de l'architecture
+ *                   souveraine, appel aux contributeurs / développeurs C/Linux,
+ *                   vitrine des sondes de combat et maillage vers RAP-EDIT.
+ *
+ * BLOC DESCRIPTIF DES NOUVELLES INTÉGRATIONS (Rev 1.5) :
+ *   - Intégration du lien direct vers 'rap-editor/index.html' dans la navigation.
+ *   - Ajout d'une bannière de présentation dédiée à RAP-EDIT dans la section Hero.
+ *   - Ajout des liens vers la vitrine et le manuel rap-edit(1) dans le pied de page.
+ *   - Maintien des 6 piliers d'outils de combat et du terminal de compilation.
+ * ========================================================================== -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAPTOR DEFENSE // Système d'Audit & Hub Développeurs</title>
+    <meta name="description" content="Boîte à outils défensive et forensique pour Linux en C99 (< 2 Mo RAM). Rejoignez l'équipe de développement.">
+    <link rel="stylesheet" href="css/raptor-core.css">
+    <link rel="icon" type="image/png" href="raptor-icon.png">
+</head>
+<body>
+
+    <!-- ======================================================================
+         1. EN-TÊTE INSTITUTIONNEL (STYLE FREEBSD & NAVIGATION MOBILE)
+         ====================================================================== -->
+    <header class="raptor-header">
+        <div class="container">
+            <a href="index.html" class="raptor-brand">
+                <img src="raptor-icon.png" alt="Logo Officiel RAPTOR DEFENSE">
+                <span>RAPTOR<span class="version-badge">v2.0</span></span>
+            </a>
+
+            <nav class="raptor-nav" id="raptorNav">
+                <a href="index.html" class="active">Accueil</a>
+                <a href="rap-editor/index.html">RAP-EDIT</a>
+                <a href="intel.html">Net-Intel</a>
+                <a href="man.html">Manuel (Man)</a>
+                <a href="faq.html">FAQ Technique</a>
+                <a href="community.html">Communauté</a>
+            </nav>
+
+            <div class="raptor-header-actions">
+                <div class="raptor-search-box">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"/>
+                    </svg>
+                    <input type="text" id="navSearchInput" placeholder="Recherche rapide...">
+                </div>
+                <a href="https://github.com/BINOKUB-GAME/RAPTOR" target="_blank" rel="noopener" class="btn-github">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+
+                <!-- Bouton Menu Mobile (Hamburger) -->
+                <button class="raptor-hamburger" id="navToggle" aria-label="Afficher le menu de navigation" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ======================================================================
+         2. BANNIÈRE HERO & APPEL AUX DÉVELOPPEURS
+         ====================================================================== -->
+    <section class="raptor-hero">
+        <div class="container">
+            <div class="raptor-hero-badge">
+                PROJET D'INGÉNIERIE // LICENCE LIBRE & OUVERTE
+            </div>
+            <h1>RAPTOR DEFENSE</h1>
+            <p class="raptor-hero-subtitle">
+                Système d'audit passif, forensique chirurgical et surveillance mémoire pour Linux. Conçu pour opérer sous famine mémoire extrême (&lt; 2 Mo RAM) sans aucune allocation dynamique en situation de survie.
+            </p>
+
+            <div class="raptor-hero-actions">
+                <a href="#compilation" class="btn-primary">Compiler le Projet (CMake)</a>
+                <a href="man.html" class="btn-secondary">Consulter le Manuel rap(1)</a>
+                <a href="rap-editor/index.html" class="btn-secondary">Découvrir RAP-EDIT</a>
+            </div>
+
+            <!-- Encart 1 : Rejoindre le projet -->
+            <div class="raptor-join-banner">
+                <div class="raptor-join-content">
+                    <h3>Rejoignez l'équipe de développement RAPTOR</h3>
+                    <p>
+                        Nous fédérons des programmeurs C / systèmes, administrateurs Unix et analystes forensiques pour éprouver le code, traquer les bogues, enrichir les listes et étendre les greffons du noyau.
+                    </p>
+                </div>
+                <a href="community.html" class="btn-primary" style="white-space: nowrap;">Rejoindre le Projet</a>
+            </div>
+
+            <!-- Encart 2 : NOUVEAU — Compagnon de survie RAP-EDIT -->
+            <div class="raptor-join-banner" style="margin-top: 16px; border-left-color: #58A6FF;">
+                <div class="raptor-join-content">
+                    <h3>Nouveau module : RAP-EDIT (Éditeur de Secours 0-Heap)</h3>
+                    <p>
+                        Éditeur autonome statique ELF 64-bit conçu pour les pannes système : inspection hexadécimale brute, comparaison in-situ, radar anti-corruption et persistance synchrone <code>fsync()</code>.
+                    </p>
+                </div>
+                <a href="rap-editor/index.html" class="btn-secondary" style="white-space: nowrap;">Ouvrir RAP-EDIT &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         3. LES 6 PILIERS DÉFENSIFS (GRILLE DE CARTES MODULAIRES)
+         ====================================================================== -->
+    <section class="raptor-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Architecture & Outils de Combat</h2>
+                <p>Une batterie de sondes indépendantes interrogeant directement l'arborescence <code>/proc</code> sans dépendance logicielle lourde.</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="raptor-card">
+                    <div class="card-icon">RX</div>
+                    <h3>Traque Mémoire Inode 0</h3>
+                    <p>
+                        Inspecte chirurgicalement <code>/proc/[PID]/maps</code> pour débusquer les pages exécutables clandestines (<code>r-xp</code>) orphelines de fichier disque. Filtre passivement les compilateurs JIT légitimes et trampolines libffi via <code>mem_whitelist.conf</code>.
+                    </p>
+                    <div class="card-footer-tag">COMMANDE : rap rx [-v]</div>
+                </div>
+
+                <div class="raptor-card">
+                    <div class="card-icon">NET</div>
+                    <h3>Net-Guard & Net-Intel</h3>
+                    <p>
+                        Analyse passive des sockets sous <code>/proc/net/tcp</code>. Évaluation mathématique CIDR (/8 à /32) et confrontation instantanée aux flux OSINT (C2, botnets, proxies) sans aucune fuite réseau externe.
+                    </p>
+                    <div class="card-footer-tag">COMMANDES : rap net | rap net -i &lt;IP&gt;</div>
+                </div>
+
+                <div class="raptor-card">
+                    <div class="card-icon">PL</div>
+                    <h3>Chasseur LD_PRELOAD</h3>
+                    <p>
+                        Traque les rootkits userland furtifs par une inspection à double palier : contrôle d'intégrité de la persistance globale sous <code>/etc/ld.so.preload</code> et audit des variables d'environnement actives dans <code>/proc/[PID]/environ</code>.
+                    </p>
+                    <div class="card-footer-tag">COMMANDE : rap preload</div>
+                </div>
+
+                <div class="raptor-card">
+                    <div class="card-icon">HR</div>
+                    <h3>Analyseur Heuristique</h3>
+                    <p>
+                        Détecte les binaires supprimés du disque en cours d'exécution (<code>deleted</code>), les lancements suspects depuis des répertoires volatils (<code>/tmp</code>, <code>/dev/shm</code>) et l'usurpation de démons système critiques (Masquerading).
+                    </p>
+                    <div class="card-footer-tag">COMMANDE : rap heur</div>
+                </div>
+
+                <div class="raptor-card">
+                    <div class="card-icon">NO</div>
+                    <h3>Console Tactique netop</h3>
+                    <p>
+                        Surveillance matricielle continue plein écran (flicker-free). Résolution directe des sockets noyau vers les PIDs réels, confrontation aux 19 867 signatures hostiles et routeur d'interventions in-place : tri (<code>s</code>), filtre (<code>f</code>), inspection (<code>i</code>), ban IP (<code>b</code>) et frappe cinétique (<code>k</code>).
+                    </p>
+                    <div class="card-footer-tag">COMMANDES : rap netop | rap no</div>
+                </div>
+
+                <div class="raptor-card">
+                    <div class="card-icon">PID</div>
+                    <h3>Riposte Cinétique Protégée</h3>
+                    <p>
+                        Neutralisation chirurgicale immédiate (<code>SIGKILL</code>) ou gel conservatoire forensique (<code>SIGSTOP</code> en état <code>T</code>). Verrous stricts interdisant tout tir sur le PID 1, sur soi-même, sur le shell parent ou sur les threads du noyau.
+                    </p>
+                    <div class="card-footer-tag">COMMANDES : rap kill | freeze</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         4. GUIDE DE COMPILATION & AMORÇAGE
+         ====================================================================== -->
+    <section class="raptor-section" id="compilation" style="background-color: var(--color-bg-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Déploiement & Compilation</h2>
+                <p>Aucune dépendance externe requise pour la trousse CLI de secours. Norme C99 stricte.</p>
+            </div>
+
+            <div class="man-viewer-box" style="max-width: 860px; margin: 0 auto;">
+                <div class="man-viewer-header">
+                    <span class="man-viewer-title">bash — Terminal de compilation</span>
+                    <button class="man-btn-copy" onclick="navigator.clipboard.writeText('git clone https://github.com/BINOKUB-GAME/RAPTOR.git\ncd RAPTOR\ncmake -B build -DCMAKE_BUILD_TYPE=Release\ncmake --build build\n./build/rap hunt')">Copier les commandes</button>
+                </div>
+                <div class="man-content" style="padding: 20px 24px;">
+<span style="color: #636D83;"># 1. Rapatrier le dépôt source</span>
+<span style="color: #E5C07B;">git clone</span> https://github.com/BINOKUB-GAME/RAPTOR.git
+<span style="color: #E5C07B;">cd</span> RAPTOR
+
+<span style="color: #636D83;"># 2. Configurer et compiler avec optimisations de combat (-O3)</span>
+<span style="color: #E5C07B;">cmake</span> -B build -DCMAKE_BUILD_TYPE=Release
+<span style="color: #E5C07B;">cmake</span> --build build
+
+<span style="color: #636D83;"># 3. Lancer l'audit de sécurité universel combiné</span>
+<span style="color: #8C1D18; font-weight: bold;">./build/rap</span> hunt
+
+<span style="color: #636D83;"># 4. Déployer la console matricielle temps réel (netop)</span>
+<span style="color: #8C1D18; font-weight: bold;">sudo ./build/rap</span> netop</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         5. PIED DE PAGE INSTITUTIONNEL
+         ====================================================================== -->
+    <footer class="raptor-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+                        <img src="raptor-icon.png" alt="RAPTOR Logo" style="height: 32px; width: 32px; border-radius: 50%;">
+                        <span style="color: #FFFFFF; font-weight: 700; font-size: 1.1rem;">RAPTOR DEFENSE</span>
+                    </div>
+                    <p style="font-size: 0.88rem; line-height: 1.6; color: #8C96A5;">
+                        Projet d'ingénierie forensique et d'audit défensif pour systèmes d'exploitation Linux. Zéro compromis sur la mémoire, indépendance technologique totale.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Documentation</h5>
+                    <ul>
+                        <li><a href="rap-editor/index.html"><strong>Éditeur RAP-EDIT</strong></a></li>
+                        <li><a href="rap-editor/man.html">Manuel rap-edit(1)</a></li>
+                        <li><a href="intel.html">Renseignement Net-Intel</a></li>
+                        <li><a href="man.html">Manuel rap(1)</a></li>
+                        <li><a href="faq.html">FAQ Faux Positifs (JIT/FFI)</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Projet & Équipe</h5>
+                    <ul>
+                        <li><a href="community.html">Rejoindre l'équipe</a></li>
+                        <li><a href="community.html#bugs">Signaler un bogue</a></li>
+                        <li><a href="community.html#plugins">Développer un greffon</a></li>
+                        <li><a href="https://github.com/BINOKUB-GAME/RAPTOR" target="_blank" rel="noopener">Dépôt Git</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Gouvernance</h5>
+                    <ul>
+                        <li><a href="community.html#charte">Charte de contribution</a></li>
+                        <li><a href="community.html#securite">Divulgation sécurité</a></li>
+                        <li><a href="community.html#licence">Licence C99</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div>
+                    &copy; 2026 RAPTOR DEFENSE Project. Développé pour la communauté des bâtisseurs et auditeurs de systèmes.
+                </div>
+                <div>
+                    Inspiré des fondations libres.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts de gestion : Menu mobile et Recherche rapide -->
+    <script>
+        (function() {
+            /* 1. Menu hamburger mobile */
+            var toggle = document.getElementById('navToggle');
+            var nav = document.getElementById('raptorNav');
+            if (toggle && nav) {
+                toggle.addEventListener('click', function() {
+                    var isOpen = nav.classList.toggle('open');
+                    toggle.setAttribute('aria-expanded', isOpen);
+                });
+            }
+
+            /* 2. Écouteur de recherche rapide vers man.html */
+            var searchInput = document.getElementById('navSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        var val = this.value.trim();
+                        if (val) {
+                            window.location.href = 'man.html?q=' + encodeURIComponent(val);
+                        }
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

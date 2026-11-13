@@ -36,7 +36,7 @@ Cette méthode installe simultanément le système d'exploitation et l'ensemble 
 Sur une installation OpenBSD/amd64 déjà en place (en tant que `root`) :
 
     pkg_add git
-    git clone https://github.com/dan-dev/raptor-os.git
+    git clone https://github.com/BINOKUB-GAME/raptor-os.git
     cd raptor-os
     RAPTOR_APP_PASS="VotreMotDePasseApp!" RAPTOR_ROOT_PASS="VotreMotDePasseRoot!" ksh install.sh
 

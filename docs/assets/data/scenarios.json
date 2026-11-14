@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "script": "data/scenarios.json",
+    "revision": "1.0",
+    "description": "Base de données modulaire des cyberattaques connues et analyse défensive comparative sous CENTURION / RAPTOR-OS 2.0 (OpenBSD/amd64)."
+  },
+  "scenarios": [
+    {
+      "id": "log4shell-rce",
+      "annee": "2021",
+      "cve": "CVE-2021-44228",
+      "categorie": "Injection & RCE",
+      "titre": "Log4Shell — Exécution de code à distance via JNDI",
+      "gravite": "Critique (CVSS 10.0)",
+      "resume": "Un attaquant injecte une chaîne JNDI piégée dans un simple en-tête HTTP (User-Agent). Le serveur interprète la chaîne, contacte un serveur LDAP malveillant et exécute du code arbitraire à distance.",
+      "serveur_classique": {
+        "titre": "Serveur Applicatif Classique (Linux / Java / Stack lourde)",
+        "etapes": [
+          "Le serveur web transmet l'en-tête HTTP non filtré au moteur de journalisation applicatif.",
+          "La bibliothèque dynamique résout la requête JNDI et initie une connexion sortante vers l'IP de l'attaquant.",
+          "Une classe malveillante est chargée en mémoire : prise de contrôle totale du serveur et pivot vers la base de données."
+        ]
+      },
+      "bouclier_raptor": {
+        "titre": "Architecture CENTURION / RAPTOR-OS 2.0",
+        "mecanismes": [
+          "Zéro JVM et zéro interpréteur dynamique : les passerelles transactionnelles sont compilées en C pur statique.",
+          "Filtrage sortant strict Packet Filter (pf) : toute connexion TCP/UDP initiée depuis le bastion vers l'extérieur est bloquée par défaut (block out all).",
+          "Confinement noyau pledge(2) et unveil(2) : le processus réseau n'a aucun droit d'exécution de sous-processus (execve interdit)."
+        ]
+      },
+      "blackbox_log": "[2026-11-14T09:12:04Z] [BLACKBOX][IMMUTABLE] [INTERFACE:em0] [SRC:198.51.100.42] [PROTO:TCP/443] Rejet syntaxique parseur C (caractères de contrôle non conformes ISO-8583/JSON) -> Paquet détruit (DROP) | Sortie sortante : BLOQUÉE par pf."
+    },
+    {
+      "id": "webshell-ransomware",
+      "annee": "2023",
+      "cve": "CVE-2023-34362",
+      "categorie": "Injection & RCE",
+      "titre": "Type MOVEit — Injection SQL, dépôt de Webshell et Rançongiciel",
+      "gravite": "Critique (CVSS 9.8)",
+      "resume": "Exploitation d'une faille d'injection SQL sur un portail exposé permettant de déposer un script exécutable dans le répertoire web, puis de chiffrer les données de l'entreprise.",
+      "serveur_classique": {
+        "titre": "Serveur Web Exposé Classique (IIS / PHP / Node.js)",
+        "etapes": [
+          "L'injection SQL contourne l'authentification et écrit un fichier exécutable dans le dossier public du serveur.",
+          "Le moteur web interprète le script déposé avec les droits du service applicatif.",
+          "L'intrus extrait les clés de base de données, chiffre les volumes et efface les journaux locaux."
+        ]
+      },
+      "bouclier_raptor": {
+        "titre": "Architecture CENTURION / RAPTOR-OS 2.0",
+        "mecanismes": [
+          "Système de fichiers cloisonné : la racine web (httpd chrooté) est montée sans permission d'exécution et sans interpréteur.",
+          "Verrouillage noyau kern.securelevel=1 : les binaires critiques, les règles pf et les journaux sont protégés par le drapeau immuable (schg).",
+          "Requêtes SQL exclusivement préparées (Prepared Statements) dans la passerelle C avec validation stricte des types."
+        ]
+      },
+      "blackbox_log": "[2026-11-14T10:04:19Z] [BLACKBOX][IMMUTABLE] [UNVEIL:VIOLATION] Tentative d'accès écriture hors périmètre chroot par worker PID 4812 -> Signal SIGKILL immédiat du noyau OpenBSD | Intégrité disque : 100% intacte."
+    },
+    {
+      "id": "syn-flood-gateway",
+      "annee": "2024",
+      "cve": "DDoS L4",
+      "categorie": "Réseau & DDoS",
+      "titre": "Saturation SYN Flood & Scan furtif sur passerelle de paiement",
+      "gravite": "Élevée (Disponibilité)",
+      "resume": "Un botnet envoie des dizaines de milliers de requêtes TCP SYN semi-ouvertes par seconde pour saturer la file d'attente réseau et bloquer les terminaux de paiement légitimes.",
+      "serveur_classique": {
+        "titre": "Serveur Standard sans filtrage matériel/noyau",
+        "etapes": [
+          "La pile TCP alloue une structure mémoire pour chaque paquet SYN usurpé reçu.",
+          "En moins de 15 secondes, la table des connexions atteint sa limite maximale.",
+          "Les terminaux de paiement légitimes reçoivent des erreurs Timeout et les transactions échouent."
+        ]
+      },
+      "bouclier_raptor": {
+        "titre": "Architecture CENTURION / RAPTOR-OS 2.0",
+        "mecanismes": [
+          "Interface Ethernet Intel dédiée (em0) optimisée pour le traitement en rafale à faible latence.",
+          "Protection synproxy state dans Packet Filter (pf) : le pare-feu valide la poignée de main TCP avant de solliciter la passerelle C.",
+          "Bascule dynamique dans la table <bruteforce> dès dépassement de seuil (max-src-conn-rate) et priorité garantie aux IP de <partenaires_paiement>."
+        ]
+      },
+      "blackbox_log": "[2026-11-14T11:30:51Z] [BLACKBOX][IMMUTABLE] [PF:SYNPROXY] Rafale détectée sur em0 (48 200 pkt/s) -> 312 IP ajoutées à <bruteforce> (block drop quick) | Latence table <partenaires_paiement> maintenue à 1.4 ms."
+    },
+    {
+      "id": "supply-chain-sshd",
+      "annee": "2024",
+      "cve": "CVE-2024-3094",
+      "categorie": "Supply Chain & Système",
+      "titre": "Type XZ Utils — Porte dérobée dans la chaîne logistique SSH",
+      "gravite": "Critique (CVSS 10.0)",
+      "resume": "Une bibliothèque de compression compromise par un acteur malveillant injecte du code caché dans le démon OpenSSH lié à systemd, permettant un accès administrateur furtif.",
+      "serveur_classique": {
+        "titre": "Distribution Généraliste à dépendances multiples",
+        "etapes": [
+          "Une mise à jour de paquet tiers introduit un objet binaire obfusqué dans une bibliothèque système.",
+          "Le démon sshd exposé publiquement charge la bibliothèque compromise au démarrage.",
+          "Une clé cryptographique spécifique permet à l'attaquant d'exécuter des commandes root avant même l'authentification."
+        ]
+      },
+      "bouclier_raptor": {
+        "titre": "Architecture CENTURION / RAPTOR-OS 2.0",
+        "mecanismes": [
+          "Socle OpenBSD/amd64 pur : aucun systemd, aucune glibc ni chaîne de dépendances externes superflues.",
+          "Surface réseau externe fermée : le port SSH (22) est totalement bloqué sur l'interface publique em0 par pf.",
+          "Empreinte logicielle minimale auditée : seuls les composants essentiels au routage transactionnel sont actifs."
+        ]
+      },
+      "blackbox_log": "[2026-11-14T14:18:09Z] [BLACKBOX][IMMUTABLE] [PF:DROP_SILENT] [INTERFACE:em0] [DST_PORT:22] Tentative de sonde SSH depuis 203.0.113.88 -> Démon sshd non exposé sur em0 | Zéro réponse émise."
+    }
+  ]
+}

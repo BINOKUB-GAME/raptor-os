@@ -1,0 +1,345 @@
+/* ============================================================================
+ * NOM DU SCRIPT : css/postmortem.css
+ * NUMÉRO DE RÉVISION : Révision 1.0
+ * ----------------------------------------------------------------------------
+ * BLOC DESCRIPTIF DES INTÉGRATIONS :
+ * Feuille de style modulaire isolée pour le Laboratoire Post-Mortem de
+ * CENTURION / RAPTOR-OS 2.0.
+ * - Thème sombre haute lisibilité (audit cybersécurité & terminal OpenBSD).
+ * - Grille comparative responsive (Serveur Classique vs Bouclier RAPTOR-OS).
+ * - Mise en valeur monospace du coffre-fort de journaux /raptor_blackbox.
+ * ============================================================================ */
+
+:root {
+    --raptor-bg: #0b0f14;
+    --raptor-surface: #131922;
+    --raptor-surface-alt: #19222e;
+    --raptor-border: #273344;
+    --raptor-text: #e6edf3;
+    --raptor-muted: #8b9bb0;
+    --raptor-accent: #10b981;
+    --raptor-accent-dim: rgba(16, 185, 129, 0.14);
+    --raptor-danger: #ef4444;
+    --raptor-danger-dim: rgba(239, 68, 68, 0.14);
+    --raptor-amber: #f59e0b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.raptor-page {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--raptor-bg);
+    color: var(--raptor-text);
+    line-height: 1.6;
+}
+
+/* Barre de navigation unifiée du site */
+.raptor-nav {
+    background-color: var(--raptor-surface);
+    border-bottom: 1px solid var(--raptor-border);
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.raptor-brand {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--raptor-accent);
+    text-decoration: none;
+    font-size: 1.05rem;
+}
+
+.raptor-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+}
+
+.raptor-links a {
+    color: var(--raptor-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
+}
+
+.raptor-links a:hover,
+.raptor-links a.active {
+    color: var(--raptor-text);
+    font-weight: 600;
+}
+
+/* Conteneur principal */
+.pm-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+}
+
+.pm-hero {
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--raptor-accent);
+    padding-left: 1.1rem;
+}
+
+.pm-hero h1 {
+    margin: 0 0 0.4rem;
+    font-size: 1.85rem;
+}
+
+.pm-hero p {
+    margin: 0;
+    color: var(--raptor-muted);
+    max-width: 820px;
+}
+
+/* Barre de filtres */
+.pm-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.pm-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.pm-filter-btn {
+    background: var(--raptor-surface);
+    color: var(--raptor-muted);
+    border: 1px solid var(--raptor-border);
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.15s ease;
+}
+
+.pm-filter-btn:hover {
+    border-color: var(--raptor-accent);
+    color: var(--raptor-text);
+}
+
+.pm-filter-btn.active {
+    background: var(--raptor-accent-dim);
+    border-color: var(--raptor-accent);
+    color: var(--raptor-accent);
+    font-weight: 600;
+}
+
+.pm-counter {
+    color: var(--raptor-muted);
+    font-size: 0.9rem;
+}
+
+/* Grille de sélection des attaques */
+.pm-selector {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.pm-card-btn {
+    text-align: left;
+    background: var(--raptor-surface);
+    border: 1px solid var(--raptor-border);
+    border-radius: 8px;
+    padding: 1rem;
+    color: var(--raptor-text);
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.15s ease;
+}
+
+.pm-card-btn:hover {
+    border-color: #455975;
+    transform: translateY(-2px);
+}
+
+.pm-card-btn.selected {
+    border-color: var(--raptor-accent);
+    background: var(--raptor-surface-alt);
+    box-shadow: 0 0 0 1px var(--raptor-accent);
+}
+
+.pm-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-bottom: 0.45rem;
+}
+
+.pm-badge-cve {
+    color: var(--raptor-amber);
+    font-family: monospace;
+    font-weight: 700;
+}
+
+.pm-badge-year {
+    color: var(--raptor-muted);
+}
+
+.pm-card-title {
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin-bottom: 0.4rem;
+}
+
+.pm-card-cat {
+    font-size: 0.8rem;
+    color: var(--raptor-muted);
+}
+
+/* Rapport diagnostique détaillé */
+.pm-report {
+    background: var(--raptor-surface);
+    border: 1px solid var(--raptor-border);
+    border-radius: 10px;
+    padding: 1.6rem;
+}
+
+.pm-report-header {
+    border-bottom: 1px solid var(--raptor-border);
+    padding-bottom: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.pm-report-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.pm-tag-cve,
+.pm-tag-gravite {
+    font-size: 0.82rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.pm-tag-cve {
+    background: var(--raptor-surface-alt);
+    border: 1px solid var(--raptor-border);
+    color: var(--raptor-text);
+}
+
+.pm-tag-gravite {
+    background: var(--raptor-danger-dim);
+    border: 1px solid var(--raptor-danger);
+    color: #fca5a5;
+}
+
+.pm-report-header h2 {
+    margin: 0.3rem 0 0.6rem;
+    font-size: 1.45rem;
+}
+
+.pm-report-resume {
+    margin: 0;
+    color: var(--raptor-muted);
+}
+
+/* Comparaison côte à côte */
+.pm-grid-compare {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.pm-panel {
+    border-radius: 8px;
+    padding: 1.2rem;
+    border: 1px solid var(--raptor-border);
+}
+
+.pm-panel-danger {
+    background: rgba(239, 68, 68, 0.06);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+.pm-panel-danger h3 {
+    color: #fca5a5;
+    margin-top: 0;
+    font-size: 1.08rem;
+}
+
+.pm-panel-shield {
+    background: rgba(16, 185, 129, 0.06);
+    border-color: rgba(16, 185, 129, 0.45);
+}
+
+.pm-panel-shield h3 {
+    color: #6ee7b7;
+    margin-top: 0;
+    font-size: 1.08rem;
+}
+
+.pm-list-steps,
+.pm-list-shield {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.pm-list-steps li,
+.pm-list-shield li {
+    margin-bottom: 0.65rem;
+}
+
+/* Trace /raptor_blackbox */
+.pm-blackbox {
+    background: #06080b;
+    border: 1px solid #1f2b3a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pm-blackbox-top {
+    background: #10161f;
+    padding: 0.55rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: monospace;
+    font-size: 0.82rem;
+    color: var(--raptor-accent);
+    border-bottom: 1px solid #1f2b3a;
+}
+
+.pm-copy-btn {
+    background: var(--raptor-surface-alt);
+    color: var(--raptor-text);
+    border: 1px solid var(--raptor-border);
+    border-radius: 4px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.pm-copy-btn:hover {
+    border-color: var(--raptor-accent);
+}
+
+.pm-blackbox pre {
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.88rem;
+    color: #a7f3d0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}

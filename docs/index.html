@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <!-- ==========================================================================
   FICHIER     : docs/index.html
-  REVISION    : 1.0
+  REVISION    : 1.1
   DESCRIPTION : Page d'accueil officielle de CENTURION — Le Bastion Numerique
                 propulse par RAPTOR-OS 2.0 (OpenBSD/amd64, kern.securelevel=1).
-                Presente l'architecture transactionnelle souveraine, les 3 piliers
-                defensifs (Flux C-CGI, Coffre-fort SQL/Canary, Fusion rap+pf),
-                le deploiement Bare-Metal via ISO autonome et le banc d'essai
-                Red Team sur reseau local.
+                Integre les liens directs vers les 3 nouveaux modules interactifs
+                (Laboratoire Post-Mortem, Simulateur Packet Filter pf et Veille
+                Hebdomadaire) ainsi que l'apercu dynamique du dernier bulletin.
 
   SECTIONS NUMEROTEES :
     01. En-tete HTML & Liaison feuille de style centurion.css
-    02. Barre de navigation superieure (Accueil, Architecture, ISO, Red Team, man)
+    02. Barre de navigation superieure (Architecture, Piliers, ISO, Post-Mortem, Simulateur, Veille, FAQ, man)
     03. Section Hero & Chaine de traitement d'une transaction critique
     04. Les 3 Piliers de CENTURION (Transactions, Coffre-fort, Fusion rap+pf)
     05. Deploiement Bare-Metal (ISO 845 Mo, SHA256 & Installation cle USB)
+    05b. Checklist Operateur Post-Installation Bare-Metal
     06. Banc d'essai Red Team & Resistance aux assauts sur reseau local
-    07. Pied de page & Attribution Licence ISC / The OpenBSD Project
+    07. Observatoire Interactif & Veille Hebdomadaire (Liens vers les 3 modules)
+    08. Pied de page & Attribution Licence ISC / The OpenBSD Project
 ========================================================================== -->
 <html lang="fr">
 <head>
@@ -39,7 +40,9 @@
                 <a href="#architecture" class="active">Architecture</a>
                 <a href="#piliers">3 Piliers</a>
                 <a href="#bare-metal">ISO Bare-Metal</a>
-                <a href="#red-team">Banc Red Team</a>
+                <a href="scenarios.html">Post-Mortem</a>
+                <a href="simulateur.html">Simulateur pf</a>
+                <a href="veille.html">Veille</a>
                 <a href="faq.html">FAQ</a>
                 <a href="man.html" class="nav-man-pill">man centurion(8)</a>
             </nav>
@@ -64,6 +67,7 @@
 
                 <div class="hero-actions">
                     <a href="https://github.com/BINOKUB-GAME/raptor-os/releases/tag/v2.0" class="btn btn-primary">Télécharger l'ISO v2.0 (845 Mo)</a>
+                    <a href="simulateur.html" class="btn btn-secondary">Tester le Simulateur pf en direct</a>
                     <a href="man.html" class="btn btn-secondary">Consulter man centurion(8) [rap + pf]</a>
                 </div>
 
@@ -185,39 +189,39 @@
             </div>
         </section>
 
-    <!-- 05b. Checklist Operateur Post-Installation Bare-Metal -->
-    <section class="section" id="post-install">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-kicker">Exploitation Premier Démarrage</div>
-                <h2>Checklist Opérateur Post-Installation Bare-Metal</h2>
-                <p>Contrôles critiques à exécuter dans les 5 premières minutes suivant le redémarrage initial après l'installation de <code>site80.tgz</code>.</p>
-            </div>
-            <div class="checklist-grid">
-                <article class="check-card critical">
-                    <span class="check-step-badge">ÉTAPE 01 &bull; INTERFACE PF</span>
-                    <h3>Adapter l'interface réseau physique</h3>
-                    <p>Identifiez le nom exact de votre carte réseau matérielle (ex. <code>em0</code>, <code>igc0</code>, <code>re0</code>) et remplacez <code>vio0</code> dans <code>ext_if</code> au sein de <code>/etc/pf.conf</code>.</p>
-                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>ifconfig | grep -E '^[a-z]'
+        <!-- 05b. Checklist Operateur Post-Installation Bare-Metal -->
+        <section class="section" id="post-install">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-kicker">Exploitation Premier Démarrage</div>
+                    <h2>Checklist Opérateur Post-Installation Bare-Metal</h2>
+                    <p>Contrôles critiques à exécuter dans les 5 premières minutes suivant le redémarrage initial après l'installation de <code>site80.tgz</code>.</p>
+                </div>
+                <div class="checklist-grid">
+                    <article class="check-card critical">
+                        <span class="check-step-badge">ÉTAPE 01 &bull; INTERFACE PF</span>
+                        <h3>Adapter l'interface réseau physique</h3>
+                        <p>Identifiez le nom exact de votre carte réseau matérielle (ex. <code>em0</code>, <code>igc0</code>, <code>re0</code>) et remplacez <code>vio0</code> dans <code>ext_if</code> au sein de <code>/etc/pf.conf</code>.</p>
+                        <pre class="terminal-block"><span class="prompt">raptor-os# </span>ifconfig | grep -E '^[a-z]'
 <span class="prompt">raptor-os# </span>vi /etc/pf.conf</pre>
-                </article>
-                <article class="check-card critical">
-                    <span class="check-step-badge">ÉTAPE 02 &bull; COFFRE-FORT SQL</span>
-                    <h3>Sécuriser les identifiants MariaDB</h3>
-                    <p>Consignez en lieu sûr les mots de passe aléatoires générés au premier démarrage par <code>/install.site</code>, puis effacez définitivement le fichier en clair.</p>
-                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>cat /root/RAPTOR_CREDENTIALS.txt
+                    </article>
+                    <article class="check-card critical">
+                        <span class="check-step-badge">ÉTAPE 02 &bull; COFFRE-FORT SQL</span>
+                        <h3>Sécuriser les identifiants MariaDB</h3>
+                        <p>Consignez en lieu sûr les mots de passe aléatoires générés au premier démarrage par <code>/install.site</code>, puis effacez définitivement le fichier en clair.</p>
+                        <pre class="terminal-block"><span class="prompt">raptor-os# </span>cat /root/RAPTOR_CREDENTIALS.txt
 <span class="prompt">raptor-os# </span>rm -P /root/RAPTOR_CREDENTIALS.txt</pre>
-                </article>
-                <article class="check-card verified">
-                    <span class="check-step-badge">ÉTAPE 03 &bull; VERROUILLAGE</span>
-                    <h3>Valider les 6 démons &amp; securelevel</h3>
-                    <p>Confirmez l'activité des 6 services du bastion, l'écoute exclusive de MariaDB sur <code>127.0.0.1</code> et le verrouillage noyau <code>kern.securelevel=1</code>.</p>
-                    <pre class="terminal-block"><span class="prompt">raptor-os# </span>rap status
+                    </article>
+                    <article class="check-card verified">
+                        <span class="check-step-badge">ÉTAPE 03 &bull; VERROUILLAGE</span>
+                        <h3>Valider les 6 démons &amp; securelevel</h3>
+                        <p>Confirmez l'activité des 6 services du bastion, l'écoute exclusive de MariaDB sur <code>127.0.0.1</code> et le verrouillage noyau <code>kern.securelevel=1</code>.</p>
+                        <pre class="terminal-block"><span class="prompt">raptor-os# </span>rap status
 <span class="prompt">raptor-os# </span>sysctl kern.securelevel</pre>
-                </article>
+                    </article>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
         <!-- 06. Banc d'essai Red Team & Resistance sur reseau local -->
         <section class="section" id="red-team">
@@ -268,9 +272,58 @@
                 </div>
             </div>
         </section>
+
+        <!-- 07. Observatoire Interactif & Veille Hebdomadaire -->
+        <section class="section" id="observatoire">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-kicker">Laboratoires &amp; Actualité Technique</div>
+                    <h2>Observatoire Interactif CENTURION</h2>
+                    <p>Explorez le comportement de RAPTOR-OS face aux cyberattaques connues, testez le filtrage Packet Filter en direct et suivez notre bulletin de veille hebdomadaire.</p>
+                </div>
+
+                <div class="grid-3">
+                    <article class="card">
+                        <span class="card-badge">MODULE 01 &bull; ANALYSE COMPARATIVE</span>
+                        <h3>Laboratoire Post-Mortem</h3>
+                        <p>
+                            Étude détaillée d'attaques critiques documentées (Log4Shell, rançongiciels web, SYN Flood,
+                            chaîne logistique SSH) et démonstration des mécanismes noyau qui les neutralisent.
+                        </p>
+                        <p style="margin-top: 1.2rem;">
+                            <a href="scenarios.html" class="btn btn-secondary">Ouvrir le Laboratoire Post-Mortem &rarr;</a>
+                        </p>
+                    </article>
+
+                    <article class="card">
+                        <span class="card-badge">MODULE 02 &bull; BAC À SABLE RÉSEAU</span>
+                        <h3>Simulateur Packet Filter (<code>pf</code>)</h3>
+                        <p>
+                            Injectez des transactions légitimes ou des rafales hostiles sur l'interface Intel <code>em0</code>
+                            et observez en temps réel les tables dynamiques <code>pf</code> et <code>/raptor_blackbox</code>.
+                        </p>
+                        <p style="margin-top: 1.2rem;">
+                            <a href="simulateur.html" class="btn btn-secondary">Lancer le Simulateur pf &rarr;</a>
+                        </p>
+                    </article>
+
+                    <article class="card">
+                        <span class="card-badge" id="home-veille-badge">MODULE 03 &bull; VEILLE HEBDO</span>
+                        <h3 id="home-veille-title">Veille Sécurité &amp; Infrastructure</h3>
+                        <p id="home-veille-summary">
+                            Chaque semaine, décryptage d'une actualité cybersécurité ou réseau et mise en perspective
+                            avec l'architecture bare-metal de CENTURION / RAPTOR-OS 2.0.
+                        </p>
+                        <p style="margin-top: 1.2rem;">
+                            <a href="veille.html" class="btn btn-secondary">Lire le bulletin de la semaine &rarr;</a>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- 07. Pied de page & Attribution Licence ISC -->
+    <!-- 08. Pied de page & Attribution Licence ISC -->
     <footer class="footer">
         <div class="container footer-inner">
             <div>
@@ -283,5 +336,6 @@
     </footer>
 
     <script src="assets/js/copy-code.js"></script>
+    <script src="assets/js/index-veille-widget.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+  NOM DU SCRIPT : simulateur.html
+  NUMÉRO DE RÉVISION : Révision 1.0
+  BLOC DESCRIPTIF DES INTÉGRATIONS :
+  - Vue HTML dédiée au Simulateur interactif Packet Filter (pf) de
+    CENTURION / RAPTOR-OS 2.0.
+  - Permet d'injecter des paquets légitimes et des attaques réseau sur em0
+    pour observer le filtrage pf, le confinement C et /raptor_blackbox.
+  - Charge de manière isolée 'assets/css/simulateur.css' et
+    'assets/js/pf-simulator.js'.
+=========================================================================== -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Packet Filter (pf) — CENTURION / RAPTOR-OS 2.0</title>
+    <link rel="stylesheet" href="assets/css/simulateur.css">
+</head>
+<body class="raptor-page">
+
+    <nav class="raptor-nav" aria-label="Navigation principale">
+        <a href="index.html" class="raptor-brand">CENTURION // RAPTOR-OS 2.0</a>
+        <div class="raptor-links">
+            <a href="index.html">Accueil</a>
+            <a href="scenarios.html">Post-Mortem</a>
+            <a href="simulateur.html" class="active">Simulateur pf</a>
+            <a href="veille.html">Veille</a>
+            <a href="man.html">Manuel</a>
+            <a href="faq.html">FAQ</a>
+        </div>
+    </nav>
+
+    <main class="sim-container">
+        <header class="sim-hero">
+            <h1>Simulateur Interactif : Filtrage Noyau Packet Filter (<code>pf</code>)</h1>
+            <p>
+                Injectez des flux réseau sur l'interface matérielle Intel <code>em0</code> pour observer en temps réel
+                comment <strong>CENTURION / RAPTOR-OS 2.0</strong> isole les transactions légitimes, bannit les attaquants
+                dans <code>&lt;bruteforce&gt;</code> et verrouille ses journaux dans <code>/raptor_blackbox</code>.
+            </p>
+        </header>
+
+        <!-- Panneau de commandes d'injection -->
+        <section id="sim-controls" class="sim-controls" aria-label="Générateur de trafic réseau">
+            <div class="sim-controls-header">
+                <h2>1. Injecter un événement sur l'interface <code>em0</code> :</h2>
+                <div class="sim-utility-btns">
+                    <button type="button" id="sim-btn-stress" class="sim-util-btn">Activer Stress Test continu</button>
+                    <button type="button" id="sim-btn-reset" class="sim-util-btn">Réinitialiser</button>
+                </div>
+            </div>
+
+            <div class="sim-btn-grid">
+                <button type="button" class="sim-action-btn btn-legit" data-sim-scenario="tx-legitime">
+                    <span class="sim-btn-tag tag-ok">AUTORISÉ · TCP/443</span>
+                    <span class="sim-btn-label">Transaction Partenaire POS</span>
+                    <span class="sim-btn-sub">IP 192.0.2.15 dans &lt;partenaires_paiement&gt;</span>
+                </button>
+
+                <button type="button" class="sim-action-btn btn-attack" data-sim-scenario="scan-port">
+                    <span class="sim-btn-tag tag-drop">SONDE · TCP/22</span>
+                    <span class="sim-btn-label">Scan Furtif Nmap / SSH</span>
+                    <span class="sim-btn-sub">Sonde externe depuis 203.0.113.77</span>
+                </button>
+
+                <button type="button" class="sim-action-btn btn-attack" data-sim-scenario="sqli-payload">
+                    <span class="sim-btn-tag tag-drop">INJECTION · HTTPS</span>
+                    <span class="sim-btn-label">Charge SQLi Malformée</span>
+                    <span class="sim-btn-sub">Requête piégée depuis 198.51.100.91</span>
+                </button>
+
+                <button type="button" class="sim-action-btn btn-attack" data-sim-scenario="syn-flood">
+                    <span class="sim-btn-tag tag-drop">DDOS L4 · 45K PKT/S</span>
+                    <span class="sim-btn-label">Rafale SYN Flood</span>
+                    <span class="sim-btn-sub">Saturation TCP semi-ouverte sur em0</span>
+                </button>
+
+                <button type="button" class="sim-action-btn btn-kernel" data-sim-scenario="tamper-kernel">
+                    <span class="sim-btn-tag tag-lock">NOYAU · SECURELEVEL=1</span>
+                    <span class="sim-btn-label">Altération pf.conf / Logs</span>
+                    <span class="sim-btn-sub">Tentative de modification fichiers immuables</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Compteurs télémétriques -->
+        <section class="sim-metrics" aria-label="Métriques en temps réel">
+            <div class="sim-metric-card">
+                <div class="sim-metric-label">Paquets reçus (em0)</div>
+                <div id="metric-em0" class="sim-metric-value">0</div>
+            </div>
+            <div class="sim-metric-card">
+                <div class="sim-metric-label">Transactions validées</div>
+                <div id="metric-pass" class="sim-metric-value val-accent">0</div>
+            </div>
+            <div class="sim-metric-card">
+                <div class="sim-metric-label">Menaces bloquées (pf)</div>
+                <div id="metric-drop" class="sim-metric-value val-danger">0</div>
+            </div>
+            <div class="sim-metric-card">
+                <div class="sim-metric-label">IP en &lt;bruteforce&gt;</div>
+                <div id="metric-ban" class="sim-metric-value val-amber">0</div>
+            </div>
+            <div class="sim-metric-card">
+                <div class="sim-metric-label">Latence transactionnelle</div>
+                <div id="metric-latency" class="sim-metric-value val-accent">1.2 ms</div>
+            </div>
+        </section>
+
+        <!-- Pipeline visuel 4 étages -->
+        <section class="sim-pipeline" aria-label="Cheminement matériel et noyau">
+            <div id="node-em0" class="sim-node">
+                <div class="sim-node-step">ÉTAGE 01 · MATÉRIEL</div>
+                <h3>Interface Intel <code>em0</code></h3>
+                <p class="sim-node-desc">Réception filaire Gigabit dédiée à faible interruption.</p>
+                <span class="sim-node-status">EN ATTENTE</span>
+            </div>
+
+            <div id="node-pf" class="sim-node">
+                <div class="sim-node-step">ÉTAGE 02 · PARE-FEU NOYAU</div>
+                <h3>Packet Filter (<code>pf</code>)</h3>
+                <p class="sim-node-desc">Filtrage <code>synproxy</code> et tables mémoire dynamiques.</p>
+                <span class="sim-node-status">EN ATTENTE</span>
+            </div>
+
+            <div id="node-c" class="sim-node">
+                <div class="sim-node-step">ÉTAGE 03 · ESPACE UTILISATEUR</div>
+                <h3>Passerelle C Confinée</h3>
+                <p class="sim-node-desc">Parseur binaire isolé par <code>pledge(2)</code> et <code>unveil(2)</code>.</p>
+                <span class="sim-node-status">EN ATTENTE</span>
+            </div>
+
+            <div id="node-bb" class="sim-node">
+                <div class="sim-node-step">ÉTAGE 04 · INTÉGRITÉ DISQUE</div>
+                <h3><code>/raptor_blackbox</code></h3>
+                <p class="sim-node-desc">Journaux <code>sappnd</code> verrouillés par <code>securelevel=1</code>.</p>
+                <span class="sim-node-status">EN ATTENTE</span>
+            </div>
+        </section>
+
+        <!-- Règles pf actives et Tables mémoire -->
+        <section class="sim-internals-grid" aria-label="Inspection des règles pf et tables mémoire">
+            <div class="sim-box">
+                <h3><span>Extrait actif : <code>/etc/pf.conf</code></span></h3>
+                <div class="sim-pf-rules">
+                    <div id="rule-block-default" class="pf-rule-line">block drop in quick on $ext_if all</div>
+                    <div id="rule-block-bruteforce" class="pf-rule-line">block drop quick from &lt;bruteforce&gt;</div>
+                    <div id="rule-synproxy" class="pf-rule-line">pass in on $ext_if proto tcp from &lt;partenaires_paiement&gt; to port 443 synproxy state (max-src-conn-rate 40/1, overload &lt;bruteforce&gt; flush global)</div>
+                    <div id="rule-pass-partner" class="pf-rule-line">pass in log on $ext_if proto tcp from &lt;partenaires_paiement&gt; to ($ext_if) port 443 keep state</div>
+                    <div id="rule-securelevel" class="pf-rule-line"># sysctl kern.securelevel=1 + chflags schg /etc/pf.conf</div>
+                </div>
+            </div>
+
+            <div class="sim-box">
+                <h3><span>Tables mémoire noyau <code>pfctl -s Tables</code></span></h3>
+                <div class="sim-tables-wrap">
+                    <div class="sim-table-card">
+                        <div class="sim-table-title title-whitelist">&lt;partenaires_paiement&gt;</div>
+                        <ul id="table-whitelist" class="sim-ip-list"></ul>
+                    </div>
+                    <div class="sim-table-card">
+                        <div class="sim-table-title title-blacklist">&lt;bruteforce&gt; (Dynamique)</div>
+                        <ul id="table-blacklist" class="sim-ip-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Terminal /raptor_blackbox -->
+        <section class="sim-terminal" aria-label="Journal immuable raptor_blackbox">
+            <div class="sim-terminal-bar">
+                <span>FLUX TEMPS RÉEL — /raptor_blackbox/audit.log (append-only)</span>
+                <button type="button" id="sim-copy-logs" class="sim-util-btn">Copier le journal</button>
+            </div>
+            <div id="sim-terminal-body" class="sim-terminal-body" aria-live="polite">
+                <div class="log-entry log-info">[INIT] Interface Intel em0 prête — Packet Filter (pf) actif — kern.securelevel=1 verrouillé.</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/pf-simulator.js" defer></script>
+</body>
+</html>

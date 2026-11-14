@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+  NOM DU SCRIPT : scenarios.html
+  NUMÉRO DE RÉVISION : Révision 1.0
+  BLOC DESCRIPTIF DES INTÉGRATIONS :
+  - Vue HTML dédiée au Laboratoire Post-Mortem de CENTURION / RAPTOR-OS 2.0.
+  - Intègre la barre de navigation unifiée vers les futurs modules (Veille & Simulateur pf).
+  - Charge de manière isolée 'css/postmortem.css' et 'js/scenarios-app.js'.
+=========================================================================== -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratoire Post-Mortem — CENTURION / RAPTOR-OS 2.0</title>
+     <link rel="stylesheet" href="assets/css/postmortem.css">
+</head>
+<body class="raptor-page">
+
+    <nav class="raptor-nav" aria-label="Navigation principale">
+        <a href="index.html" class="raptor-brand">CENTURION // RAPTOR-OS 2.0</a>
+        <div class="raptor-links">
+            <a href="index.html">Accueil</a>
+            <a href="scenarios.html" class="active">Post-Mortem</a>
+            <a href="simulateur.html">Simulateur pf</a>
+            <a href="veille.html">Veille</a>
+            <a href="man.html">Manuel</a>
+            <a href="faq.html">FAQ</a>
+        </div>
+    </nav>
+
+    <main class="pm-container">
+        <header class="pm-hero">
+            <h1>Laboratoire Post-Mortem : Attaques réelles vs RAPTOR-OS</h1>
+            <p>
+                Analyse comparative de cyberattaques documentées en entreprise. Sélectionnez un scénario
+                pour observer la chaîne de compromission sur un serveur classique et les mécanismes noyau
+                OpenBSD/amd64 (<code>pf</code>, <code>pledge</code>, <code>unveil</code>, <code>kern.securelevel=1</code>)
+                qui neutralisent la menace.
+            </p>
+        </header>
+
+        <section class="pm-toolbar" aria-label="Filtres de menaces">
+            <div id="pm-filters" class="pm-filters"></div>
+            <div id="pm-counter" class="pm-counter">Chargement des scénarios...</div>
+        </section>
+
+        <section id="pm-selector" class="pm-selector" aria-label="Sélection d'une attaque"></section>
+
+        <section id="pm-viewer" aria-live="polite"></section>
+    </main>
+
+    <script src="assets/js/scenarios-app.js" defer></script>
+</body>
+</html>

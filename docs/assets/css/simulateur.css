@@ -1,0 +1,530 @@
+/* ============================================================================
+ * NOM DU SCRIPT : assets/css/simulateur.css
+ * NUMÉRO DE RÉVISION : Révision 1.0
+ * ----------------------------------------------------------------------------
+ * BLOC DESCRIPTIF DES INTÉGRATIONS :
+ * Feuille de style modulaire isolée pour le Simulateur interactif Packet Filter
+ * (pf) de CENTURION / RAPTOR-OS 2.0.
+ * - Cohérence visuelle stricte avec les modules Post-Mortem et Veille.
+ * - Schéma animé en 4 étages matériels et noyau (em0 -> pf -> C -> Blackbox).
+ * - Affichage temps réel des règles /etc/pf.conf, des tables mémoire pf et
+ *   du terminal immuable /raptor_blackbox.
+ * ============================================================================ */
+
+:root {
+    --raptor-bg: #0b0f14;
+    --raptor-surface: #131922;
+    --raptor-surface-alt: #19222e;
+    --raptor-border: #273344;
+    --raptor-text: #e6edf3;
+    --raptor-muted: #8b9bb0;
+    --raptor-accent: #10b981;
+    --raptor-accent-dim: rgba(16, 185, 129, 0.14);
+    --raptor-danger: #ef4444;
+    --raptor-danger-dim: rgba(239, 68, 68, 0.14);
+    --raptor-amber: #f59e0b;
+    --raptor-amber-dim: rgba(245, 158, 11, 0.14);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.raptor-page {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--raptor-bg);
+    color: var(--raptor-text);
+    line-height: 1.6;
+}
+
+/* Barre de navigation unifiée */
+.raptor-nav {
+    background-color: var(--raptor-surface);
+    border-bottom: 1px solid var(--raptor-border);
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.raptor-brand {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--raptor-accent);
+    text-decoration: none;
+    font-size: 1.05rem;
+}
+
+.raptor-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+}
+
+.raptor-links a {
+    color: var(--raptor-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
+}
+
+.raptor-links a:hover,
+.raptor-links a.active {
+    color: var(--raptor-text);
+    font-weight: 600;
+}
+
+/* Conteneur principal */
+.sim-container {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+}
+
+.sim-hero {
+    margin-bottom: 1.8rem;
+    border-left: 4px solid var(--raptor-accent);
+    padding-left: 1.1rem;
+}
+
+.sim-hero h1 {
+    margin: 0 0 0.4rem;
+    font-size: 1.85rem;
+}
+
+.sim-hero p {
+    margin: 0;
+    color: var(--raptor-muted);
+    max-width: 860px;
+}
+
+/* Panneau de commandes d'injection de trafic */
+.sim-controls {
+    background: var(--raptor-surface);
+    border: 1px solid var(--raptor-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.sim-controls-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.sim-controls-header h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--raptor-text);
+}
+
+.sim-utility-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.sim-btn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 0.75rem;
+}
+
+.sim-action-btn {
+    text-align: left;
+    background: var(--raptor-surface-alt);
+    border: 1px solid var(--raptor-border);
+    border-radius: 8px;
+    padding: 0.85rem 0.95rem;
+    color: var(--raptor-text);
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.sim-action-btn:hover {
+    transform: translateY(-2px);
+    border-color: #4b6280;
+}
+
+.sim-action-btn.btn-legit:hover {
+    border-color: var(--raptor-accent);
+}
+
+.sim-action-btn.btn-attack:hover {
+    border-color: var(--raptor-danger);
+}
+
+.sim-action-btn.btn-kernel:hover {
+    border-color: var(--raptor-amber);
+}
+
+.sim-btn-tag {
+    display: inline-block;
+    font-family: monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    margin-bottom: 0.35rem;
+}
+
+.tag-ok {
+    background: var(--raptor-accent-dim);
+    color: var(--raptor-accent);
+}
+
+.tag-drop {
+    background: var(--raptor-danger-dim);
+    color: #fca5a5;
+}
+
+.tag-lock {
+    background: var(--raptor-amber-dim);
+    color: #fcd34d;
+}
+
+.sim-btn-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.93rem;
+}
+
+.sim-btn-sub {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--raptor-muted);
+    margin-top: 0.2rem;
+}
+
+.sim-util-btn {
+    background: var(--raptor-surface-alt);
+    color: var(--raptor-text);
+    border: 1px solid var(--raptor-border);
+    border-radius: 6px;
+    padding: 0.42rem 0.85rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.sim-util-btn:hover {
+    border-color: var(--raptor-accent);
+}
+
+.sim-util-btn.stress-active {
+    background: var(--raptor-amber-dim);
+    border-color: var(--raptor-amber);
+    color: #fcd34d;
+    font-weight: 600;
+}
+
+/* Compteurs télémétriques */
+.sim-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.sim-metric-card {
+    background: var(--raptor-surface);
+    border: 1px solid var(--raptor-border);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+}
+
+.sim-metric-label {
+    font-size: 0.8rem;
+    color: var(--raptor-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sim-metric-value {
+    font-family: monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+    color: var(--raptor-text);
+}
+
+.sim-metric-value.val-accent {
+    color: var(--raptor-accent);
+}
+
+.sim-metric-value.val-danger {
+    color: #f87171;
+}
+
+.sim-metric-value.val-amber {
+    color: var(--raptor-amber);
+}
+
+/* Pipeline visuel en 4 étages */
+.sim-pipeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sim-node {
+    background: var(--raptor-surface);
+    border: 2px solid var(--raptor-border);
+    border-radius: 10px;
+    padding: 1.1rem;
+    position: relative;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.sim-node-step {
+    font-family: monospace;
+    font-size: 0.78rem;
+    color: var(--raptor-muted);
+    margin-bottom: 0.3rem;
+}
+
+.sim-node h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.02rem;
+}
+
+.sim-node-desc {
+    margin: 0 0 0.75rem;
+    font-size: 0.86rem;
+    color: var(--raptor-muted);
+}
+
+.sim-node-status {
+    display: inline-block;
+    font-family: monospace;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    background: var(--raptor-surface-alt);
+    color: var(--raptor-muted);
+}
+
+/* États d'animation des nœuds */
+.sim-node.state-pass {
+    border-color: var(--raptor-accent);
+    background: rgba(16, 185, 129, 0.08);
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.2);
+}
+
+.sim-node.state-pass .sim-node-status {
+    background: var(--raptor-accent-dim);
+    color: #6ee7b7;
+    font-weight: 700;
+}
+
+.sim-node.state-drop {
+    border-color: var(--raptor-danger);
+    background: rgba(239, 68, 68, 0.09);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.24);
+}
+
+.sim-node.state-drop .sim-node-status {
+    background: var(--raptor-danger-dim);
+    color: #fca5a5;
+    font-weight: 700;
+}
+
+.sim-node.state-lock {
+    border-color: var(--raptor-amber);
+    background: rgba(245, 158, 11, 0.09);
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.22);
+}
+
+.sim-node.state-lock .sim-node-status {
+    background: var(--raptor-amber-dim);
+    color: #fcd34d;
+    font-weight: 700;
+}
+
+.sim-node.state-bypassed {
+    opacity: 0.52;
+}
+
+/* Grille inférieure : Règles pf + Tables mémoire */
+.sim-internals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.sim-box {
+    background: var(--raptor-surface);
+    border: 1px solid var(--raptor-border);
+    border-radius: 10px;
+    padding: 1.15rem;
+}
+
+.sim-box h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    color: var(--raptor-text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sim-pf-rules {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.82rem;
+    background: #080b0f;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.pf-rule-line {
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    color: #94a3b8;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.pf-rule-line.rule-hit-pass {
+    background: var(--raptor-accent-dim);
+    color: #a7f3d0;
+    border-left-color: var(--raptor-accent);
+}
+
+.pf-rule-line.rule-hit-drop {
+    background: var(--raptor-danger-dim);
+    color: #fecaca;
+    border-left-color: var(--raptor-danger);
+}
+
+.pf-rule-line.rule-hit-lock {
+    background: var(--raptor-amber-dim);
+    color: #fde68a;
+    border-left-color: var(--raptor-amber);
+}
+
+/* Tables mémoire pf (<partenaires_paiement> et <bruteforce>) */
+.sim-tables-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+}
+
+@media (max-width: 600px) {
+    .sim-tables-wrap {
+        grid-template-columns: 1fr;
+    }
+}
+
+.sim-table-card {
+    background: #080b0f;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 0.75rem;
+}
+
+.sim-table-title {
+    font-family: monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.title-whitelist {
+    color: var(--raptor-accent);
+}
+
+.title-blacklist {
+    color: #f87171;
+}
+
+.sim-ip-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: 0.8rem;
+    max-height: 155px;
+    overflow-y: auto;
+}
+
+.sim-ip-list li {
+    padding: 0.22rem 0.35rem;
+    border-bottom: 1px solid #131c27;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.4rem;
+}
+
+.sim-ip-list li:last-child {
+    border-bottom: none;
+}
+
+.ip-tag-muted {
+    color: var(--raptor-muted);
+    font-size: 0.74rem;
+}
+
+/* Terminal /raptor_blackbox */
+.sim-terminal {
+    background: #06080b;
+    border: 1px solid #1f2b3a;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.sim-terminal-bar {
+    background: #10161f;
+    padding: 0.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f2b3a;
+    font-family: monospace;
+    font-size: 0.82rem;
+    color: var(--raptor-accent);
+}
+
+.sim-terminal-body {
+    padding: 0.9rem 1rem;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.82rem;
+    max-height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.log-entry {
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.log-pass {
+    color: #6ee7b7;
+}
+
+.log-drop {
+    color: #fca5a5;
+}
+
+.log-lock {
+    color: #fcd34d;
+}
+
+.log-info {
+    color: #93c5fd;
+}

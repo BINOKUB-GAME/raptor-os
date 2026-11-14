@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+  NOM DU SCRIPT : veille.html
+  NUMÉRO DE RÉVISION : Révision 1.0
+  BLOC DESCRIPTIF DES INTÉGRATIONS :
+  - Vue HTML dédiée à la Veille Sécurité Hebdomadaire de CENTURION / RAPTOR-OS 2.0.
+  - Affiche automatiquement le dernier billet hebdomadaire à la une et les
+    archives filtrables par catégorie ou mot-clé depuis 'assets/data/veille.json'.
+  - Charge de manière isolée 'assets/css/veille.css' et 'assets/js/veille-app.js'.
+=========================================================================== -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veille Sécurité Hebdomadaire — CENTURION / RAPTOR-OS 2.0</title>
+    <link rel="stylesheet" href="assets/css/veille.css">
+</head>
+<body class="raptor-page">
+
+    <nav class="raptor-nav" aria-label="Navigation principale">
+        <a href="index.html" class="raptor-brand">CENTURION // RAPTOR-OS 2.0</a>
+        <div class="raptor-links">
+            <a href="index.html">Accueil</a>
+            <a href="scenarios.html">Post-Mortem</a>
+            <a href="simulateur.html">Simulateur pf</a>
+            <a href="veille.html" class="active">Veille</a>
+            <a href="man.html">Manuel</a>
+            <a href="faq.html">FAQ</a>
+        </div>
+    </nav>
+
+    <main class="vl-container">
+        <header class="vl-hero">
+            <h1>Veille Sécurité &amp; Infrastructure Hebdomadaire</h1>
+            <p>
+                Chaque semaine, analyse d'une actualité cybersécurité, réseau ou système et mise en perspective
+                avec les choix d'architecture bare-metal de <strong>CENTURION / RAPTOR-OS 2.0</strong>.
+            </p>
+        </header>
+
+        <section id="veille-featured" class="vl-featured-section" aria-label="Bulletin hebdomadaire à la une"></section>
+
+        <section class="vl-toolbar" aria-label="Filtres et recherche des archives">
+            <div id="veille-filters" class="vl-filters"></div>
+            <div class="vl-search-group">
+                <input type="search" id="veille-search" class="vl-search-input" placeholder="Rechercher (ex: synproxy, pledge, NVMe)..." aria-label="Rechercher dans la veille">
+                <span id="veille-counter" class="vl-counter">Chargement...</span>
+            </div>
+        </section>
+
+        <section id="veille-list" class="vl-grid" aria-live="polite"></section>
+    </main>
+
+    <script src="assets/js/veille-app.js" defer></script>
+</body>
+</html>

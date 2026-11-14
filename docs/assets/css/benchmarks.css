@@ -1,0 +1,279 @@
+/* ============================================================================
+ * NOM DU SCRIPT : assets/css/benchmarks.css
+ * NUMÉRO DE RÉVISION : Révision 1.0
+ * ----------------------------------------------------------------------------
+ * BLOC DESCRIPTIF DES INTÉGRATIONS :
+ * Feuille de style modulaire isolée pour la page Banc d'essai Bare-Metal
+ * (docs/benchmarks.html) de CENTURION / RAPTOR-OS 2.0.
+ * - Cohérence visuelle stricte avec Post-Mortem, Veille et Simulateur pf.
+ * - Grille matérielle dédiée aux spécifications physiques du ThinkPad T490.
+ * - Cartes de relevés télémétriques avec badge de statut et commande d'audit.
+ * ============================================================================ */
+
+:root {
+    --raptor-bg: #0b0f14;
+    --raptor-surface: #131922;
+    --raptor-surface-alt: #19222e;
+    --raptor-border: #273344;
+    --raptor-text: #e6edf3;
+    --raptor-muted: #8b9bb0;
+    --raptor-accent: #10b981;
+    --raptor-accent-dim: rgba(16, 185, 129, 0.14);
+    --raptor-amber: #f59e0b;
+    --raptor-amber-dim: rgba(245, 158, 11, 0.14);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.raptor-page {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--raptor-bg);
+    color: var(--raptor-text);
+    line-height: 1.6;
+}
+
+/* Barre de navigation unifiée */
+.raptor-nav {
+    background-color: var(--raptor-surface);
+    border-bottom: 1px solid var(--raptor-border);
+    padding: 0.9rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.raptor-brand {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--raptor-accent);
+    text-decoration: none;
+    font-size: 1.05rem;
+}
+
+.raptor-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+}
+
+.raptor-links a {
+    color: var(--raptor-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.15s ease;
+}
+
+.raptor-links a:hover,
+.raptor-links a.active {
+    color: var(--raptor-text);
+    font-weight: 600;
+}
+
+/* Conteneur principal */
+.bm-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
+}
+
+.bm-hero {
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--raptor-accent);
+    padding-left: 1.1rem;
+}
+
+.bm-hero h1 {
+    margin: 0 0 0.4rem;
+    font-size: 1.85rem;
+}
+
+.bm-hero p {
+    margin: 0;
+    color: var(--raptor-muted);
+    max-width: 850px;
+}
+
+/* Fiche matérielle ThinkPad T490 */
+.bm-hw-panel {
+    background: linear-gradient(145deg, #131c26 0%, #101720 100%);
+    border: 1px solid var(--raptor-border);
+    border-radius: 10px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 2rem;
+}
+
+.bm-hw-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid var(--raptor-border);
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.1rem;
+}
+
+.bm-hw-header h2 {
+    margin: 0;
+    font-size: 1.18rem;
+}
+
+.bm-hw-badge {
+    background: var(--raptor-accent-dim);
+    border: 1px solid var(--raptor-accent);
+    color: var(--raptor-accent);
+    font-family: monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.22rem 0.65rem;
+    border-radius: 4px;
+}
+
+.bm-hw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.9rem;
+}
+
+.bm-hw-item {
+    background: var(--raptor-surface);
+    border: 1px solid #1f2b3a;
+    border-radius: 6px;
+    padding: 0.75rem 0.9rem;
+}
+
+.bm-hw-label {
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--raptor-muted);
+}
+
+.bm-hw-val {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--raptor-text);
+    margin-top: 0.2rem;
+}
+
+/* Grille des campagnes de test */
+.bm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.25rem;
+}
+
+.bm-card {
+    background: var(--raptor-surface);
+    border: 1px solid var(--raptor-border);
+    border-radius: 10px;
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bm-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.bm-code {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--raptor-accent);
+    font-weight: 700;
+}
+
+.bm-status {
+    font-family: monospace;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.status-pending {
+    background: var(--raptor-amber-dim);
+    border: 1px solid var(--raptor-amber);
+    color: #fcd34d;
+}
+
+.status-validated {
+    background: var(--raptor-accent-dim);
+    border: 1px solid var(--raptor-accent);
+    color: #6ee7b7;
+}
+
+.bm-card h3 {
+    margin: 0.2rem 0 0.75rem;
+    font-size: 1.12rem;
+}
+
+.bm-metrics-box {
+    background: var(--raptor-surface-alt);
+    border: 1px solid var(--raptor-border);
+    border-radius: 6px;
+    padding: 0.75rem 0.9rem;
+    margin-bottom: 0.9rem;
+}
+
+.bm-metric-row {
+    font-size: 0.88rem;
+    margin-bottom: 0.35rem;
+}
+
+.bm-metric-row:last-child {
+    margin-bottom: 0;
+}
+
+.bm-metric-row strong {
+    color: var(--raptor-muted);
+}
+
+.bm-proto {
+    font-size: 0.9rem;
+    color: var(--raptor-muted);
+    margin: 0 0 1rem;
+}
+
+.bm-cmd-box {
+    background: #06080b;
+    border: 1px solid #1f2b3a;
+    border-radius: 6px;
+    padding: 0.65rem 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.bm-cmd-box code {
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-size: 0.8rem;
+    color: #a7f3d0;
+    word-break: break-all;
+}
+
+.bm-copy-btn {
+    background: var(--raptor-surface-alt);
+    color: var(--raptor-text);
+    border: 1px solid var(--raptor-border);
+    border-radius: 4px;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.bm-copy-btn:hover {
+    border-color: var(--raptor-accent);
+}

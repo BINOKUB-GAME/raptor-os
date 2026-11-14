@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- ==========================================================================
+  NOM DU SCRIPT : benchmarks.html
+  NUMÉRO DE RÉVISION : Révision 1.0
+  BLOC DESCRIPTIF DES INTÉGRATIONS :
+  - Vue HTML dédiée au Banc d'essai Bare-Metal de CENTURION / RAPTOR-OS 2.0.
+  - Affiche la fiche matérielle du Lenovo ThinkPad T490 (em0) et les relevés
+    reproductibles chargés depuis 'assets/data/benchmarks.json'.
+  - Charge de manière isolée 'assets/css/benchmarks.css' et
+    'assets/js/benchmarks-app.js'.
+=========================================================================== -->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banc d'essai Bare-Metal — CENTURION / RAPTOR-OS 2.0</title>
+    <link rel="stylesheet" href="assets/css/benchmarks.css">
+</head>
+<body class="raptor-page">
+
+    <nav class="raptor-nav" aria-label="Navigation principale">
+        <a href="index.html" class="raptor-brand">CENTURION // RAPTOR-OS 2.0</a>
+        <div class="raptor-links">
+            <a href="index.html">Accueil</a>
+            <a href="scenarios.html">Post-Mortem</a>
+            <a href="simulateur.html">Simulateur pf</a>
+            <a href="benchmarks.html" class="active">Banc d'essai</a>
+            <a href="veille.html">Veille</a>
+            <a href="man.html">Manuel</a>
+            <a href="faq.html">FAQ</a>
+        </div>
+    </nav>
+
+    <main class="bm-container">
+        <header class="bm-hero">
+            <h1>Banc d'essai Bare-Metal &amp; Relevés Empiriques</h1>
+            <p>
+                Protocole de validation reproductible exécuté sur machine physique dédiée équipée de
+                <strong>CENTURION / RAPTOR-OS 2.0</strong> (OpenBSD/amd64) : mesure de latence transactionnelle,
+                résistance Packet Filter (<code>pf</code>) sur interface Intel <code>em0</code> et intégrité noyau.
+            </p>
+        </header>
+
+        <section id="bm-hardware" class="bm-hw-panel" aria-label="Configuration matérielle du banc d'essai"></section>
+
+        <section id="bm-campaigns" class="bm-grid" aria-live="polite"></section>
+    </main>
+
+    <script src="assets/js/benchmarks-app.js" defer></script>
+</body>
+</html>

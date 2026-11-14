@@ -1,0 +1,58 @@
+{
+  "_meta": {
+    "script": "assets/data/benchmarks.json",
+    "revision": "1.0",
+    "description": "Releves de performance, latence et resistance bare-metal pour CENTURION / RAPTOR-OS 2.0 sur Lenovo ThinkPad T490 (interface Intel em0)."
+  },
+  "plateforme_materielle": {
+    "modele": "Lenovo ThinkPad T490 (Bare-Metal Dédié)",
+    "processeur": "Intel Core i5-8265U (4 cœurs / 8 threads, 1.60 GHz – Turbo 3.90 GHz)",
+    "memoire": "16 Go DDR4",
+    "stockage": "256 Go SSD NVMe (nvme0 / sd0)",
+    "interface_reseau": "Intel Ethernet Connection I219-LM (em0 — 1000baseT full-duplex)",
+    "systeme": "CENTURION / RAPTOR-OS 2.0 (OpenBSD 8.0 / amd64, kern.securelevel=1)",
+    "banc_client": "Poste Debian 13 (dan-dev) relié par câble Ethernet RJ-45 isolé"
+  },
+  "campagnes": [
+    {
+      "id": "bench-01-transactions-c",
+      "code": "TEST 01 · DÉBIT & LATENCE",
+      "titre": "Passerelle transactionnelle C natif (raptor_db_post + MariaDB 127.0.0.1)",
+      "objectif_sla": "Latence moyenne < 2,0 ms | 0 erreur SQL sous rafale légitime",
+      "valeur_mesuree": "En attente de livraison T490",
+      "statut": "PRÊT POUR MESURE",
+      "protocole": "Envoi de 10 000 requêtes POST transactionnelles paramétrées depuis dan-dev sur le port 443 de l'interface em0, avec validation double pledge(2) et écriture MariaDB locale.",
+      "commande_audit": "wrk -t4 -c64 -d30s --latency https://192.168.1.50/cgi-bin/raptor_db_post"
+    },
+    {
+      "id": "bench-02-pf-synproxy",
+      "code": "TEST 02 · PARE-FEU NOYAU PF",
+      "titre": "Absorption SYN Flood & priorisation <partenaires_paiement> sur em0",
+      "objectif_sla": "100 % des IP hostiles bannies dans <bruteforce> | Latence partenaire < 2,5 ms",
+      "valeur_mesuree": "En attente de livraison T490",
+      "statut": "PRÊT POUR MESURE",
+      "protocole": "Saturation TCP SYN haute cadence simulée depuis dan-dev pendant l'exécution simultanée de transactions autorisées afin de mesurer l'isolation matérielle du contrôleur Intel em0.",
+      "commande_audit": "pfctl -t bruteforce -T show && pfctl -si"
+    },
+    {
+      "id": "bench-03-waf-canary",
+      "code": "TEST 03 · CONFINEMENT & CANARY",
+      "titre": "Rejet WAF pré-exécution, chroot / pledge(2) et sonde raptor_vault_canary",
+      "objectif_sla": "Blocage 100 % des charges SQLi/XSS | Alerte < 10 ms dans /raptor_blackbox",
+      "valeur_mesuree": "En attente de livraison T490",
+      "statut": "PRÊT POUR MESURE",
+      "protocole": "Injection automatisée de traversées de répertoires, caractères de contrôle et sondes sur la table piège raptor_vault_canary pour vérifier la réaction immédiate de raptor_sql_sentry.",
+      "commande_audit": "rap status && tail -n 20 /raptor_blackbox/audit.log"
+    },
+    {
+      "id": "bench-04-empreinte-securelevel",
+      "code": "TEST 04 · EMPREINTE & IMMUABILITÉ",
+      "titre": "Consommation RAM réelle et verrouillage noyau kern.securelevel=1",
+      "objectif_sla": "Empreinte RAM totale < 220 Mo | Refus EPERM sur modification /etc/pf.conf",
+      "valeur_mesuree": "En attente de livraison T490",
+      "statut": "PRÊT POUR MESURE",
+      "protocole": "Relevé de la mémoire vive occupée par les 6 démons actifs et test d'écriture forcée sous privilèges root sur les règles pf et les binaires marqués schg/sappnd.",
+      "commande_audit": "top -b -n 1 | head -n 12 && sysctl kern.securelevel"
+    }
+  ]
+}

@@ -5,6 +5,16 @@
     "description": "Base de données hebdomadaire de veille cybersécurité et infrastructure pour CENTURION / RAPTOR-OS 2.0. Le premier élément du tableau 'bulletins' s'affiche automatiquement à la une."
   },
   "bulletins": [
+        {
+      "id": "2026-s46-supply-chain-c-deps",
+      "semaine": "Semaine 46 — 2026",
+      "date": "2026-11-15",
+      "categorie": "OpenBSD & Noyau",
+      "titre": "Compromission de paquets tiers et vulnérabilités critiques dans les parseurs réseau dynamiques",
+      "source_contexte": "Avis de sécurité hebdomadaires du Centre canadien pour la cybersécurité (CCC) et bulletins CVE de la semaine du 8 au 15 novembre 2026.",
+      "resume": "Plusieurs avis publiés ces sept derniers jours signalent des vulnérabilités critiques de dépassement de tampon et d'exécution de code à distance affectant des bibliothèques tierces populaires de sérialisation et d'analyse de paquets réseau liées dynamiquement. Parallèlement, des campagnes d'empoisonnement de dépôts de paquets ont ciblé les chaînes de compilation automatisées pour injecter des portes dérobées silencieuses lors des mises à jour de dépendances externes.",
+      "eclairage_raptor": "Sur CENTURION / RAPTOR-OS 2.0, l'architecture en C pur statique dépourvue de dépendances tierces externes et de parseurs dynamiques complexes élimine par conception l'ensemble de cette surface d'attaque liée à la chaîne logistique. Chaque démon critique est compilé de façon autonome et cloisonné par chroot, pledge(2) et unveil(2) sous kern.securelevel=1, empêchant tout accès non autorisé au système de fichiers ou aux appels système. L'interface Intel em0 filtrée par Packet Filter (pf) bloque tout flux sortant non sollicité, tandis que /raptor_blackbox garantit l'intégrité des journaux d'audit."
+    },
     {
       "id": "2026-s46-synproxy-em0",
       "semaine": "Semaine 46 — 2026",

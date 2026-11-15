@@ -1,43 +1,51 @@
 <!DOCTYPE html>
 <!-- ==========================================================================
   FICHIER     : docs/index.html
-  REVISION    : 1.1
-  DESCRIPTION : Page d'accueil officielle de CENTURION — Le Bastion Numerique
-                propulse par RAPTOR-OS 2.0 (OpenBSD/amd64, kern.securelevel=1).
-                Integre les liens directs vers les 3 nouveaux modules interactifs
-                (Laboratoire Post-Mortem, Simulateur Packet Filter pf et Veille
-                Hebdomadaire) ainsi que l'apercu dynamique du dernier bulletin.
+  REVISION    : 1.2
+  BLOC DESCRIPTIF DES NOUVELLES INTEGRATIONS :
+    - Mise en avant du premier cas d'usage concret de deploiement : Serveur de
+      fichiers critiques et coffre-fort documentaire (WAN & LAN) avec indexation
+      MariaDB/MySQL isolee sur 127.0.0.1.
+    - Ajout de la section dediee #cas-usage-fichiers (Section 04) detaillant le
+      portail web WAN durci (RAPTOR-HTTPD/2.0 + pf), le partage LAN confine
+      (SFTP natif + chroot/unveil) et l'immunite anti-rancongiciel (WORM via
+      kern.securelevel=1, drapeaux schg/sappnd et rap sentry).
+    - Precision explicite de la vocation appliance dediee (hors usage grand
+      public) et ajout de l'acces direct au Banc d'essai Bare-Metal.
+    - Renumerotation ordonnee des sections (01 a 10) avec preservation totale
+      des identifiants DOM de index-veille-widget.js et copy-code.js.
 
   SECTIONS NUMEROTEES :
     01. En-tete HTML & Liaison feuille de style centurion.css
-    02. Barre de navigation superieure (Architecture, Piliers, ISO, Post-Mortem, Simulateur, Veille, FAQ, man)
-    03. Section Hero & Chaine de traitement d'une transaction critique
-    04. Les 3 Piliers de CENTURION (Transactions, Coffre-fort, Fusion rap+pf)
-    05. Deploiement Bare-Metal (ISO 845 Mo, SHA256 & Installation cle USB)
-    05b. Checklist Operateur Post-Installation Bare-Metal
-    06. Banc d'essai Red Team & Resistance aux assauts sur reseau local
-    07. Observatoire Interactif & Veille Hebdomadaire (Liens vers les 3 modules)
-    08. Pied de page & Attribution Licence ISC / The OpenBSD Project
+    02. Barre de navigation superieure unifiee
+    03. Section Hero & Chaine de traitement d'une requete critique
+    04. Premier Cas d'Usage : Serveur de Fichiers Critiques WAN & LAN
+    05. Les 3 Piliers de CENTURION (Transactions, Coffre-fort, Fusion rap+pf)
+    06. Deploiement Bare-Metal (ISO 845 Mo, SHA256 & Installation cle USB)
+    07. Checklist Operateur Post-Installation Bare-Metal
+    08. Banc d'essai Red Team & Resistance aux assauts sur reseau local
+    09. Observatoire Interactif & Veille Hebdomadaire
+    10. Pied de page & Attribution Licence ISC / The OpenBSD Project
 ========================================================================== -->
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CENTURION — Le Bastion Numérique | RAPTOR-OS 2.0 (OpenBSD/amd64)</title>
-    <meta name="description" content="CENTURION sous RAPTOR-OS 2.0 : bastion numérique souverain sur OpenBSD/amd64 dédié aux plateformes transactionnelles critiques, coffres-forts SQL et défense active rap+pf.">
+    <title>CENTURION — Serveur de Fichiers Critiques &amp; Bastion Numérique | RAPTOR-OS 2.0</title>
+    <meta name="description" content="CENTURION sous RAPTOR-OS 2.0 : serveur de fichiers critiques WAN/LAN, coffre-fort documentaire anti-rançongiciel et socle transactionnel OpenBSD/amd64 durci par kern.securelevel=1.">
     <link rel="stylesheet" href="assets/css/centurion.css">
 </head>
 <body>
 
-    <!-- 02. Barre de navigation superieure -->
+    <!-- 02. Barre de navigation superieure unifiee -->
     <header class="topbar">
         <div class="container topbar-inner">
             <a href="index.html" class="brand">
                 <span>CENTURION</span>
                 <span class="brand-tag">RAPTOR-OS 2.0</span>
             </a>
-           <nav class="nav-links" aria-label="Navigation principale">
-                <a href="index.html">Accueil</a>
+            <nav class="nav-links" aria-label="Navigation principale">
+                <a href="index.html" class="active">Accueil</a>
                 <a href="scenarios.html">Post-Mortem</a>
                 <a href="simulateur.html">Simulateur pf</a>
                 <a href="benchmarks.html">Banc d'essai</a>
@@ -49,59 +57,120 @@
     </header>
 
     <main>
-        <!-- 03. Section Hero & Chaine de traitement d'une transaction critique -->
+        <!-- 03. Section Hero & Chaine de traitement d'une requete critique -->
         <section class="hero" id="architecture">
             <div class="container">
                 <div class="status-bar">
                     <span class="status-dot"></span>
-                    <span>SOCLE OPENBSD/AMD64 &bull; KERN.SECURELEVEL=1 &bull; APPLIANCE AUTONOME</span>
+                    <span>SOCLE OPENBSD/AMD64 &bull; KERN.SECURELEVEL=1 &bull; SERVEUR DE FICHIERS CRITIQUES &amp; BASTION</span>
                 </div>
                 <h1>CENTURION — <span>Le Bastion Numérique</span></h1>
                 <p class="hero-lead">
-                    Distribution durcie et autonome bâtie sur <strong>RAPTOR-OS 2.0</strong>, conçue pour les
-                    <strong>plateformes transactionnelles critiques</strong> et la rétention inviolable de données sensibles.
-                    Chaque requête franchit un pare-feu applicatif pré-exécution, des passerelles C natif confinées par
-                    <code>chroot</code> et <code>pledge(2)</code>, et un verrouillage noyau immédiat via <code>pf</code>.
+                    Appliance système souveraine bâtie sur <strong>RAPTOR-OS 2.0</strong>, conçue comme
+                    <strong>serveur de fichiers critiques (WAN &amp; LAN)</strong>, coffre-fort documentaire anti-rançongiciel
+                    et socle transactionnel haute intégrité. Déployable immédiatement sur matériel dédié, il protège
+                    vos archives sensibles et vos bases MariaDB/MySQL par confinement <code>chroot</code> / <code>pledge(2)</code>
+                    et verrouillage noyau <code>pf</code>.
                 </p>
 
                 <div class="hero-actions">
                     <a href="https://github.com/BINOKUB-GAME/raptor-os/releases/tag/v2.0" class="btn btn-primary">Télécharger l'ISO v2.0 (845 Mo)</a>
-                    <a href="simulateur.html" class="btn btn-secondary">Tester le Simulateur pf en direct</a>
-                    <a href="man.html" class="btn btn-secondary">Consulter man centurion(8) [rap + pf]</a>
+                    <a href="benchmarks.html" class="btn btn-secondary">Banc d'essai Bare-Metal</a>
+                    <a href="simulateur.html" class="btn btn-secondary">Simulateur pf en direct</a>
+                    <a href="man.html" class="btn btn-secondary">man centurion(8)</a>
                 </div>
 
-                <div class="pipeline" aria-label="Flux d'une transaction dans CENTURION">
+                <div class="pipeline" aria-label="Flux d'une requête dans CENTURION">
                     <div class="pipe-step lock">
                         <div class="pipe-label">01. Bouclier Noyau</div>
                         <div class="pipe-title">Packet Filter (pf)</div>
-                        <div class="pipe-desc">Filtrage L3/L4 et bannissement instantané des attaquants dans la table <code>badhosts</code>.</div>
+                        <div class="pipe-desc">Filtrage L3/L4 WAN/LAN et bannissement silencieux dans la table <code>badhosts</code>.</div>
                     </div>
                     <div class="pipe-step">
                         <div class="pipe-label">02. Sas Applicatif</div>
                         <div class="pipe-title">RAPTOR-HTTPD/2.0</div>
-                        <div class="pipe-desc">Inspection WAF pré-exécution, 6 en-têtes de sécurité HTTP et journalisation dans <code>/raptor_blackbox</code>.</div>
+                        <div class="pipe-desc">Inspection WAF pré-exécution des dépôts et accès fichiers, journalisée dans <code>/raptor_blackbox</code>.</div>
                     </div>
                     <div class="pipe-step">
-                        <div class="pipe-label">03. Moteur Transactionnel</div>
-                        <div class="pipe-title">C-CGI + pledge(2)</div>
-                        <div class="pipe-desc">Exécution déterministe (<code>raptor_db</code> / <code>raptor_db_post</code>) en environnement <code>chroot</code> minimal.</div>
+                        <div class="pipe-label">03. Exécution Confinée</div>
+                        <div class="pipe-title">C-CGI / PHP + pledge(2)</div>
+                        <div class="pipe-desc">Traitement déterministe en environnement <code>chroot</code> minimal et accès disque verrouillé par <code>unveil(2)</code>.</div>
                     </div>
                     <div class="pipe-step vault">
-                        <div class="pipe-label">04. Coffre &amp; Sonde SQL</div>
-                        <div class="pipe-title">MariaDB + SQL Sentry</div>
-                        <div class="pipe-desc">Écoute stricte <code>127.0.0.1</code>, table piège <code>raptor_vault_canary</code> et audit temps réel.</div>
+                        <div class="pipe-label">04. Archives &amp; Index SQL</div>
+                        <div class="pipe-title">Coffre WORM + MariaDB</div>
+                        <div class="pipe-desc">Rétention immuable (<code>schg</code>/<code>sappnd</code>), base MariaDB sur <code>127.0.0.1</code> et sonde <code>raptor_vault_canary</code>.</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 04. Les 3 Piliers de CENTURION -->
+        <!-- 04. Premier Cas d'Usage : Serveur de Fichiers Critiques WAN & LAN -->
+        <section class="section" id="cas-usage-fichiers">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-kicker">Cas d'Usage Prioritaire &bull; Déploiement Immédiat</div>
+                    <h2>Serveur de fichiers critiques &amp; coffre-fort documentaire (WAN / LAN)</h2>
+                    <p>
+                        <strong>RAPTOR-OS 2.0</strong> n'a pas vocation à remplacer un système bureautique grand public : c'est une
+                        appliance dédiée prête à installer par clé USB pour héberger, indexer sous MariaDB/MySQL et verrouiller les
+                        documents sensibles d'une organisation (actes juridiques, dossiers cliniques, contrats, sauvegardes maîtresses).
+                    </p>
+                </div>
+
+                <div class="grid-3">
+                    <article class="card">
+                        <span class="card-badge">ACCÈS EXTERNE &bull; PORTAIL WAN</span>
+                        <h3>Diffusion &amp; Dépôt Web Durcis</h3>
+                        <p>
+                            Exposez un portail client ou partenaire sur Internet (<code>em0</code>) pour le dépôt et la consultation de
+                            documents indexés dans MariaDB/MySQL sans exposer votre base de données au réseau.
+                        </p>
+                        <ul class="spec-list">
+                            <li>Serveur web <code>RAPTOR-HTTPD/2.0</code> + <code>php85_fpm</code> / passerelles C-CGI</li>
+                            <li>Rejet WAF immédiat des traversées de répertoires (<code>../</code>) et scans</li>
+                            <li>Base MariaDB strictement isolée sur la boucle locale <code>127.0.0.1</code></li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <span class="card-badge">RÉSEAU INTERNE &bull; PARTAGE LAN</span>
+                        <h3>Transferts Internes Confinés (SFTP)</h3>
+                        <p>
+                            Remplacez les serveurs de fichiers complexes et vulnérables par un partage réseau interne chiffré
+                            nativement via OpenSSH/SFTP, sans installer de piles tierces lourdes.
+                        </p>
+                        <ul class="spec-list">
+                            <li>Règles <code>pf</code> dédiées limitant l'accès SFTP aux postes autorisés du LAN</li>
+                            <li>Cloisonnement strict par répertoire via <code>chroot</code> et <code>unveil(2)</code></li>
+                            <li>Zéro dépendance externe (aucun démon SMB/Samba requis)</li>
+                        </ul>
+                    </article>
+
+                    <article class="card">
+                        <span class="card-badge">IMMUNITÉ WORM &bull; ANTI-RANÇONGICIEL</span>
+                        <h3>Archives Inviolables au Repos</h3>
+                        <p>
+                            Contrairement à un NAS classique dont les partages peuvent être chiffrés par un rançongiciel, les
+                            archives scellées sur RAPTOR-OS résistent même à une élévation de privilèges.
+                        </p>
+                        <ul class="spec-list">
+                            <li>Verrouillage <code>kern.securelevel=1</code> avec attributs noyau <code>schg</code> et <code>sappnd</code></li>
+                            <li>Suppression ou chiffrement à distance impossible, même sous le compte <code>root</code></li>
+                            <li>Surveillance temps réel des répertoires par <code>rap sentry</code> et <code>/raptor_blackbox</code></li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 05. Les 3 Piliers de CENTURION -->
         <section class="section" id="piliers">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">Architecture Souveraine</div>
                     <h2>Les trois piliers du Bastion CENTURION</h2>
-                    <p>Une défense cohérente couvrant la transaction en transit, la donnée verrouillée au repos et le pilotage unifié entre couche applicative et noyau.</p>
+                    <p>Une défense cohérente couvrant la donnée verrouillée au repos, la transaction critique en transit et le pilotage unifié entre couche applicative et noyau.</p>
                 </div>
 
                 <div class="grid-3">
@@ -150,7 +219,7 @@
             </div>
         </section>
 
-        <!-- 05. Deploiement Bare-Metal -->
+        <!-- 06. Deploiement Bare-Metal -->
         <section class="section" id="bare-metal">
             <div class="container">
                 <div class="section-header">
@@ -169,7 +238,7 @@
                     <p><strong>1. Télécharger l'image et sa signature officielle :</strong></p>
                     <p style="margin: 0.6rem 0 1rem;">
                         Récupérez <code>raptor-os-2.0-amd64.iso</code> et <code>raptor-os-2.0-amd64.iso.sha256</code> depuis
-                        <a href="../../releases/latest"><strong>GitHub Releases (v2.0)</strong></a>, puis vérifiez l'empreinte :
+                        <a href="https://github.com/BINOKUB-GAME/raptor-os/releases/tag/v2.0"><strong>GitHub Releases (v2.0)</strong></a>, puis vérifiez l'empreinte :
                     </p>
                     <div class="sha-box">
                         05ef0bea698e1e29b28323e06a58744a2e370b738220f8ce23d92f51140aef0e &nbsp;raptor-os-2.0-amd64.iso
@@ -188,7 +257,7 @@
             </div>
         </section>
 
-        <!-- 05b. Checklist Operateur Post-Installation Bare-Metal -->
+        <!-- 07. Checklist Operateur Post-Installation Bare-Metal -->
         <section class="section" id="post-install">
             <div class="container">
                 <div class="section-header">
@@ -222,13 +291,13 @@
             </div>
         </section>
 
-        <!-- 06. Banc d'essai Red Team & Resistance sur reseau local -->
+        <!-- 08. Banc d'essai Red Team & Resistance sur reseau local -->
         <section class="section" id="red-team">
             <div class="container">
                 <div class="section-header">
                     <div class="section-kicker">Validation Empirique &amp; Stress-Test</div>
                     <h2>Banc d'essai Red Team — Résistance sur Réseau Local</h2>
-                    <p>Protocole d'assauts frontaux exécutés depuis un poste attaquant sur le réseau local contre une machine physique dédiée équipée de CENTURION / RAPTOR-OS 2.0.</p>
+                    <p>Protocole d'assauts frontaux exécutés depuis un poste attaquant sur le réseau local contre une machine physique dédiée équipée de CENTURION / RAPTOR-OS 2.0 (voir aussi le <a href="benchmarks.html">Banc d'essai Bare-Metal détaillé</a>).</p>
                 </div>
 
                 <div class="table-wrap">
@@ -272,7 +341,7 @@
             </div>
         </section>
 
-        <!-- 07. Observatoire Interactif & Veille Hebdomadaire -->
+        <!-- 09. Observatoire Interactif & Veille Hebdomadaire -->
         <section class="section" id="observatoire">
             <div class="container">
                 <div class="section-header">
@@ -322,7 +391,7 @@
         </section>
     </main>
 
-    <!-- 08. Pied de page & Attribution Licence ISC -->
+    <!-- 10. Pied de page & Attribution Licence ISC -->
     <footer class="footer">
         <div class="container footer-inner">
             <div>

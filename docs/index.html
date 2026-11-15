@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <!-- ==========================================================================
   FICHIER     : docs/index.html
-  REVISION    : 1.2
+  REVISION    : 1.3
   BLOC DESCRIPTIF DES NOUVELLES INTEGRATIONS :
-    - Mise en avant du premier cas d'usage concret de deploiement : Serveur de
-      fichiers critiques et coffre-fort documentaire (WAN & LAN) avec indexation
-      MariaDB/MySQL isolee sur 127.0.0.1.
-    - Ajout de la section dediee #cas-usage-fichiers (Section 04) detaillant le
-      portail web WAN durci (RAPTOR-HTTPD/2.0 + pf), le partage LAN confine
-      (SFTP natif + chroot/unveil) et l'immunite anti-rancongiciel (WORM via
-      kern.securelevel=1, drapeaux schg/sappnd et rap sentry).
-    - Precision explicite de la vocation appliance dediee (hors usage grand
-      public) et ajout de l'acces direct au Banc d'essai Bare-Metal.
-    - Renumerotation ordonnee des sections (01 a 10) avec preservation totale
+    - Ajout d'un bouton d'acces direct vers l'edition Linux C99 (RAPTOR DEFENSE)
+      sur https://raptor.binokub.com/ dans la zone d'actions Hero (.hero-actions).
+    - Ajout d'une passerelle explicite vers https://raptor.binokub.com/ dans le
+      Pilier 03 (Fusion Operationnelle rap + pf) pour les administrateurs
+      souhaitant deployer rap, rap-edit et Net-Intel sous Linux.
+    - Ajout du lien ecosysteme RAPTOR DEFENSE (Edition Linux C99) dans le pied
+      de page institutionnel (.footer).
+    - Preservation integrale des sections 01 a 10, des classes centurion.css et
       des identifiants DOM de index-veille-widget.js et copy-code.js.
 
   SECTIONS NUMEROTEES :
@@ -78,6 +76,7 @@
                     <a href="benchmarks.html" class="btn btn-secondary">Banc d'essai Bare-Metal</a>
                     <a href="simulateur.html" class="btn btn-secondary">Simulateur pf en direct</a>
                     <a href="man.html" class="btn btn-secondary">man centurion(8)</a>
+                    <a href="https://raptor.binokub.com/" target="_blank" rel="noopener" class="btn btn-secondary">RAPTOR CLI (Linux) &rarr;</a>
                 </div>
 
                 <div class="pipeline" aria-label="Flux d'une requête dans CENTURION">
@@ -211,8 +210,8 @@
                         </p>
                         <ul class="spec-list">
                             <li>Supervision des 6 démons : <code>raptor</code>, <code>raptor_sql_sentry</code>, <code>httpd</code>, <code>slowcgi</code>, <code>php85_fpm</code>, <code>mysqld</code></li>
-                            <li>Bannissement dynamique via <code>pfctl -t badhosts</code></li>
-                            <li>Documentation complète dans <a href="man.html">man centurion(8)</a></li>
+                            <li>Bannissement dynamique via <code>pfctl -t badhosts</code> et référence dans <a href="man.html">man centurion(8)</a></li>
+                            <li>Édition CLI autonome C99 (<code>rap</code> &amp; <code>rap-edit</code>) disponible pour Linux sur <a href="https://raptor.binokub.com/" target="_blank" rel="noopener">raptor.binokub.com</a></li>
                         </ul>
                     </article>
                 </div>
@@ -398,7 +397,7 @@
                 <strong>CENTURION — Le Bastion Numérique</strong> &bull; Propulsé par <strong>RAPTOR-OS 2.0</strong> (OpenBSD/amd64).
             </div>
             <div>
-                Distribué sous <a href="LICENSE">licence ISC</a> avec attribution amont à <strong>The OpenBSD Project</strong>.
+                Écosystème : <a href="https://raptor.binokub.com/" target="_blank" rel="noopener">RAPTOR DEFENSE (Édition Linux C99)</a> &bull; Distribué sous <a href="LICENSE">licence ISC</a> (<strong>The OpenBSD Project</strong>).
             </div>
         </div>
     </footer>

@@ -1,11 +1,14 @@
 /* ============================================================================
  * FICHIER     : docs/assets/css/centurion.css
- * REVISION    : 1.1
- * DESCRIPTION : Feuille de style principale et modulaire du site vitrine et
- *               technique CENTURION — Le Bastion Numerique (RAPTOR-OS 2.0).
- *               Passage au theme clair haute lisibilite sur fond blanc pur,
- *               bordures nettes, cartes d'architecture 3 couches, blocs
- *               SHA256/Bare-Metal et tableau de banc d'essai Red Team.
+ * REVISION    : 1.2
+ * BLOC DESCRIPTIF DES NOUVELLES INTEGRATIONS :
+ *   - Conservation integrale du theme clair haute lisibilite (sections 01-12).
+ *   - Completion des styles structurels de la feuille de manuel BSD
+ *     (.man-section, .man-entry, .man-cmd, .man-desc, .man-layer-tag).
+ *   - Ajout de la section 13 : masquage prioritaire (.man-hidden) et mise en
+ *     relief des resultats de recherche dans des boites gris fonce delimitees
+ *     (.man-search-card) avec adaptation des balises <code>, badges et
+ *     surlignage du mot-cle recherche (mark.man-highlight).
  *
  * SECTIONS NUMEROTEES :
  *   01. Variables & Palette claire (:root)
@@ -16,6 +19,9 @@
  *   06. Bloc Bare-Metal ISO, SHA256 & Commandes Terminal
  *   07. Tableau Banc d'essai Red Team (Reseau local)
  *   08. Pied de page, Licence ISC & Responsive
+ *   09. Page de manuel unifiee man centurion(8) (rap + pf)
+ *   12. Checklist Operateur Post-Installation Bare-Metal
+ *   13. Filtrage dynamique & Cartes gris fonce du manuel centurion(8)
  * ============================================================================ */
 
 /* 01. Variables & Palette claire (:root) */
@@ -623,6 +629,92 @@ tr:last-child td {
     margin-bottom: 1.75rem;
 }
 
+.man-running-footer {
+    border-bottom: none;
+    border-top: 2px solid var(--text-main);
+    padding-bottom: 0;
+    padding-top: 0.85rem;
+    margin-bottom: 0;
+    margin-top: 2rem;
+}
+
+.man-section {
+    margin-bottom: 1.85rem;
+}
+
+.man-section-title {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-main);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+}
+
+.man-body {
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.man-entry {
+    padding: 0.35rem 0;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.man-cmd {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.94rem;
+    color: var(--text-main);
+    margin-bottom: 0.3rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.man-desc {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+    line-height: 1.65;
+}
+
+.man-layer-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.14rem 0.5rem;
+    border-radius: 4px;
+    background-color: #f0f9ff;
+    color: var(--accent-cyan);
+    border: 1px solid #bae6fd;
+}
+
+.man-layer-tag.pf {
+    background-color: #fef3c7;
+    color: var(--accent-amber);
+    border-color: #fcd34d;
+}
+
+.man-layer-tag.sec {
+    background-color: #ecfdf5;
+    color: var(--accent-emerald);
+    border-color: #a7f3d0;
+}
+
+@media (max-width: 680px) {
+    .man-sheet {
+        padding: 1.25rem 1rem;
+    }
+
+    .man-body {
+        padding-left: 0.4rem;
+    }
+}
+
 /* 12. Checklist Operateur Post-Installation Bare-Metal */
 .checklist-grid {
     display: grid;
@@ -686,4 +778,62 @@ tr:last-child td {
     .check-card {
         padding: 1.1rem 1rem;
     }
+}
+
+/* 13. Filtrage dynamique & Cartes gris fonce du manuel centurion(8) */
+.man-entry.man-hidden,
+.man-section.man-hidden {
+    display: none !important;
+}
+
+.man-entry.man-search-card {
+    background-color: #141d2b !important;
+    color: #e6edf3 !important;
+    border: 1px solid #2b3a4e !important;
+    border-left: 4px solid #10b981 !important;
+    border-radius: 8px !important;
+    padding: 1.15rem 1.35rem !important;
+    margin-bottom: 0.35rem !important;
+    box-shadow: 0 6px 18px rgba(6, 10, 16, 0.22) !important;
+}
+
+.man-entry.man-search-card .man-cmd {
+    color: #f8fafc !important;
+    margin-bottom: 0.45rem !important;
+}
+
+.man-entry.man-search-card .man-desc {
+    color: #cbd5e1 !important;
+}
+
+.man-entry.man-search-card code {
+    background-color: #0b1018 !important;
+    color: #6ee7b7 !important;
+    border: 1px solid #253346 !important;
+}
+
+.man-entry.man-search-card .man-layer-tag {
+    background-color: rgba(14, 165, 233, 0.16) !important;
+    color: #7dd3fc !important;
+    border-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+.man-entry.man-search-card .man-layer-tag.pf {
+    background-color: rgba(245, 158, 11, 0.16) !important;
+    color: #fcd34d !important;
+    border-color: rgba(251, 191, 36, 0.4) !important;
+}
+
+.man-entry.man-search-card .man-layer-tag.sec {
+    background-color: rgba(16, 185, 129, 0.16) !important;
+    color: #6ee7b7 !important;
+    border-color: rgba(52, 211, 153, 0.4) !important;
+}
+
+mark.man-highlight {
+    background-color: rgba(16, 185, 129, 0.30);
+    color: #ffffff;
+    padding: 0.05rem 0.28rem;
+    border-radius: 3px;
+    font-weight: 600;
 }

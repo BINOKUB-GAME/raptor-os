@@ -1,115 +1,240 @@
-/* ============================================================================
- * FICHIER     : docs/assets/js/man-filter.js
- * REVISION    : 1.0
- * DESCRIPTION : Moteur de recherche et filtrage temps reel pour la page de
- *               manuel unifiee centurion(8) (docs/man.html) fusionnant rap
- *               et Packet Filter (pf) sous RAPTOR-OS 2.0. Aucune dependance
- *               externe requise.
- *
- * FONCTIONS NUMEROTEES :
- *   01. initManFilter       - Initialise les ecouteurs sur recherche et filtres
- *   02. normalizeText       - Normalise une chaine (minuscules, sans accents)
- *   03. applyManFilters     - Filtre les entrees .man-entry et met a jour le compteur
- *   04. bindShortcutKeys    - Active le raccourci '/' (style less/man) et Echap
- * ============================================================================ */
+/**
+ * ============================================================================
+ * NOM DU SCRIPT : assets/js/man-filter.js
+ * NUMÉRO DE RÉVISION : Révision 2.2
+ * ----------------------------------------------------------------------------
+ * BLOC DESCRIPTIF DES INTÉGRATIONS :
+ * Moteur de recherche et de filtrage visuel haute lisibilité pour le manuel
+ * système centurion(8) (docs/man.html) de CENTURION / RAPTOR-OS 2.0.
+ * - Encapsule chaque résultat trouvé lors d'une recherche ou d'un filtre dans
+ *   une boîte gris foncé délimitée (.man-search-card) pour le détacher
+ *   visuellement du fond blanc du manuel.
+ * - Surligne sans risque XSS (parcours des nœuds texte DOM) les occurrences du
+ *   terme recherché à l'intérieur des boîtes de résultats.
+ * - Masque temporairement les sections statiques non filtrables (SYNOPSIS,
+ *   EXEMPLES, FILES, SEE ALSO) lorsqu'un mot-clé est saisi afin d'éviter
+ *   toute confusion visuelle sous les résultats.
+ * ----------------------------------------------------------------------------
+ * INDEX NUMÉROTÉ DES FONCTIONS :
+ * 1. initialiserFiltreManuel()     : Point d'entrée au chargement du DOM.
+ * 2. attacherEvenements()          : Relie saisie, filtres et raccourcis clavier.
+ * 3. appliquerFiltres()            : Filtre les entrées, gère les boîtes et sections.
+ * 4. definirVisibiliteElement()    : Applique ou retire le masquage CSS prioritaire.
+ * 5. nettoyerSurlignage()          : Supprime les balises <mark> précédentes.
+ * 6. surlignerTermeDansElement()   : Met en valeur le mot recherché dans la boîte.
+ * 7. normaliserTexte()             : Normalise une chaîne (sans accents/majuscules).
+ * ============================================================================
+ */
 
 (function () {
     "use strict";
 
-    let activeCategory = "all";
+    let categorieActive = "all";
 
-    /* 02. Normalise une chaine (minuscules, sans accents) */
-    function normalizeText(str) {
-        return (str || "")
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-    }
+    /**
+     * 1. Point d'entrée principal au chargement du DOM.
+     */
+    function initialiserFiltreManuel() {
+        const champRecherche = document.getElementById("man-search");
+        const compteur = document.getElementById("man-count");
 
-    /* 03. Filtre les entrees .man-entry et met a jour le compteur */
-    function applyManFilters() {
-        const input = document.getElementById("man-search");
-        const counter = document.getElementById("man-count");
-        const entries = document.querySelectorAll(".man-entry");
-        const sections = document.querySelectorAll(".man-section[data-filterable='true']");
-
-        const query = normalizeText(input ? input.value.trim() : "");
-        let visibleCount = 0;
-
-        entries.forEach(function (entry) {
-            const category = entry.getAttribute("data-category") || "all";
-            const content = normalizeText(entry.textContent);
-
-            const matchCategory = (activeCategory === "all") || (category === activeCategory);
-            const matchQuery = (query === "") || (content.indexOf(query) !== -1);
-
-            if (matchCategory && matchQuery) {
-                entry.classList.remove("is-hidden");
-                visibleCount++;
-            } else {
-                entry.classList.add("is-hidden");
-            }
-        });
-
-        sections.forEach(function (sec) {
-            const visibleInSec = sec.querySelectorAll(".man-entry:not(.is-hidden)").length;
-            if (visibleInSec === 0) {
-                sec.classList.add("is-hidden");
-            } else {
-                sec.classList.remove("is-hidden");
-            }
-        });
-
-        if (counter) {
-            counter.textContent = visibleCount + " entrée(s) affichée(s)";
-        }
-    }
-
-    /* 04. Active le raccourci '/' (style less/man) et Echap */
-    function bindShortcutKeys(searchInput) {
-        document.addEventListener("keydown", function (event) {
-            if (!searchInput) {
-                return;
-            }
-            if (event.key === "/" && document.activeElement !== searchInput) {
-                event.preventDefault();
-                searchInput.focus();
-                searchInput.select();
-            } else if (event.key === "Escape" && document.activeElement === searchInput) {
-                searchInput.value = "";
-                applyManFilters();
-                searchInput.blur();
-            }
-        });
-    }
-
-    /* 01. Initialise les ecouteurs sur recherche et filtres */
-    function initManFilter() {
-        const searchInput = document.getElementById("man-search");
-        const filterButtons = document.querySelectorAll(".filter-btn");
-
-        if (searchInput) {
-            searchInput.addEventListener("input", applyManFilters);
-            bindShortcutKeys(searchInput);
+        if (!champRecherche || !compteur) {
+            return;
         }
 
-        filterButtons.forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                filterButtons.forEach(function (b) {
+        attacherEvenements(champRecherche);
+        appliquerFiltres();
+    }
+
+    /**
+     * 2. Relie le champ de recherche, les boutons de catégories et le clavier.
+     */
+    function attacherEvenements(champRecherche) {
+        champRecherche.addEventListener("input", appliquerFiltres);
+
+        document.querySelectorAll(".filter-btn").forEach(function (bouton) {
+            bouton.addEventListener("click", function () {
+                document.querySelectorAll(".filter-btn").forEach(function (b) {
                     b.classList.remove("active");
                 });
-                btn.classList.add("active");
-                activeCategory = btn.getAttribute("data-filter") || "all";
-                applyManFilters();
+                this.classList.add("active");
+                categorieActive = this.getAttribute("data-filter") || "all";
+                appliquerFiltres();
             });
         });
 
-        applyManFilters();
+        document.addEventListener("keydown", function (evenement) {
+            const cible = evenement.target;
+            const estDansChamp = cible && (cible.tagName === "INPUT" || cible.tagName === "TEXTAREA");
+
+            if (evenement.key === "/" && !estDansChamp) {
+                evenement.preventDefault();
+                champRecherche.focus();
+                champRecherche.select();
+            } else if (evenement.key === "Escape" && document.activeElement === champRecherche) {
+                champRecherche.value = "";
+                appliquerFiltres();
+            }
+        });
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initManFilter);
-    } else {
-        initManFilter();
+    /**
+     * 3. Filtre chaque .man-entry, applique le style boîte gris foncé et gère les sections.
+     */
+    function appliquerFiltres() {
+        const champRecherche = document.getElementById("man-search");
+        const compteur = document.getElementById("man-count");
+        const saisieBrute = champRecherche ? champRecherche.value.trim() : "";
+        const terme = normaliserTexte(saisieBrute);
+        const estEnRechercheOuFiltre = (terme !== "" || categorieActive !== "all");
+
+        const toutesLesEntrees = document.querySelectorAll(".man-entry");
+        const totalEntrees = toutesLesEntrees.length;
+        let visibles = 0;
+
+        toutesLesEntrees.forEach(function (entree) {
+            nettoyerSurlignage(entree);
+
+            const categorieEntree = entree.getAttribute("data-category") || "";
+            const texteEntree = normaliserTexte(entree.textContent || "");
+
+            const correspondCategorie = (categorieActive === "all" || categorieEntree === categorieActive);
+            const correspondTexte = (terme === "" || texteEntree.indexOf(terme) !== -1);
+            const estVisible = correspondCategorie && correspondTexte;
+
+            definirVisibiliteElement(entree, estVisible);
+
+            if (estVisible) {
+                visibles += 1;
+                if (estEnRechercheOuFiltre) {
+                    entree.classList.add("man-search-card");
+                    if (terme !== "") {
+                        surlignerTermeDansElement(entree, terme);
+                    }
+                } else {
+                    entree.classList.remove("man-search-card");
+                }
+            } else {
+                entree.classList.remove("man-search-card");
+            }
+        });
+
+        /* Masque les sections filtrables qui ne contiennent aucun résultat */
+        document.querySelectorAll('.man-section[data-filterable="true"]').forEach(function (section) {
+            const entreesSection = section.querySelectorAll(".man-entry");
+            let sectionAUnVisible = false;
+
+            entreesSection.forEach(function (entree) {
+                if (!entree.classList.contains("man-hidden")) {
+                    sectionAUnVisible = true;
+                }
+            });
+
+            definirVisibiliteElement(section, sectionAUnVisible);
+        });
+
+        /* Masque temporairement les sections statiques (SYNOPSIS, EXEMPLES, FILES...) lors d'une saisie */
+        document.querySelectorAll('.man-section:not([data-filterable="true"])').forEach(function (sectionStatique) {
+            definirVisibiliteElement(sectionStatique, terme === "");
+        });
+
+        if (compteur) {
+            compteur.textContent = visibles + " / " + totalEntrees + " entrée" + (visibles > 1 ? "s" : "") + " affichée" + (visibles > 1 ? "s" : "");
+        }
     }
+
+    /**
+     * 4. Applique ou retire le masquage CSS prioritaire sur un élément du DOM.
+     */
+    function definirVisibiliteElement(element, estVisible) {
+        if (estVisible) {
+            element.classList.remove("man-hidden");
+            element.removeAttribute("hidden");
+            element.style.removeProperty("display");
+        } else {
+            element.classList.add("man-hidden");
+            element.setAttribute("hidden", "hidden");
+            element.style.setProperty("display", "none", "important");
+        }
+    }
+
+    /**
+     * 5. Retire proprement toutes les balises <mark class="man-highlight"> existantes.
+     */
+    function nettoyerSurlignage(conteneur) {
+        const marques = conteneur.querySelectorAll("mark.man-highlight");
+        marques.forEach(function (marque) {
+            const noeudTexte = document.createTextNode(marque.textContent || "");
+            if (marque.parentNode) {
+                marque.parentNode.replaceChild(noeudTexte, marque);
+            }
+        });
+        conteneur.normalize();
+    }
+
+    /**
+     * 6. Surligne les occurrences du terme dans les nœuds texte sans altérer le HTML.
+     */
+    function surlignerTermeDansElement(conteneur, termeNormalise) {
+        if (!termeNormalise) {
+            return;
+        }
+
+        const walker = document.createTreeWalker(conteneur, NodeFilter.SHOW_TEXT, null);
+        const noeudsATraiter = [];
+        let noeudCourant = walker.nextNode();
+
+        while (noeudCourant) {
+            if (noeudCourant.nodeValue && noeudCourant.nodeValue.trim() !== "") {
+                noeudsATraiter.push(noeudCourant);
+            }
+            noeudCourant = walker.nextNode();
+        }
+
+        noeudsATraiter.forEach(function (noeudTexte) {
+            const texteOriginal = noeudTexte.nodeValue;
+            const texteNormalise = normaliserTexte(texteOriginal);
+            let indexTrouve = texteNormalise.indexOf(termeNormalise);
+
+            if (indexTrouve === -1 || !noeudTexte.parentNode) {
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            let curseur = 0;
+
+            while (indexTrouve !== -1) {
+                if (indexTrouve > curseur) {
+                    fragment.appendChild(document.createTextNode(texteOriginal.slice(curseur, indexTrouve)));
+                }
+
+                const marque = document.createElement("mark");
+                marque.className = "man-highlight";
+                marque.textContent = texteOriginal.slice(indexTrouve, indexTrouve + termeNormalise.length);
+                fragment.appendChild(marque);
+
+                curseur = indexTrouve + termeNormalise.length;
+                indexTrouve = texteNormalise.indexOf(termeNormalise, curseur);
+            }
+
+            if (curseur < texteOriginal.length) {
+                fragment.appendChild(document.createTextNode(texteOriginal.slice(curseur)));
+            }
+
+            noeudTexte.parentNode.replaceChild(fragment, noeudTexte);
+        });
+    }
+
+    /**
+     * 7. Normalise une chaîne (minuscules, sans accents).
+     */
+    function normaliserTexte(chaine) {
+        return String(chaine)
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    document.addEventListener("DOMContentLoaded", initialiserFiltreManuel);
 })();
